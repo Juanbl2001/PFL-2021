@@ -12,4 +12,11 @@ miZipWith f [] (y:ys) = []
 miZipWith f (x:xs) (y:ys) = f x y: miZipWith f xs ys
 
 --3.4
---myisort:: Ord a =>
+insert :: Ord a => a -> [a] -> [a]
+insert x [] = [x]
+insert x (y:ys) | x < y     = x:y:ys
+                | otherwise = y:(insert x ys)
+
+isort :: Ord a => [a] -> [a]
+isort [] = []
+isort (x:xs) = insert x (isort xs)

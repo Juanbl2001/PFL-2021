@@ -36,5 +36,5 @@ sumList = auxSoma 0
 somaBN :: BigNumber -> BigNumber -> BigNumber
 somaBN (Neg x) (Neg y) = Neg (sumList x y)
 somaBN (Neg x) (Pos y) = Neg (sumList x y)
-somaBN (Pos x) (Neg y) = Pos (sumList x y)
+somaBN (Pos x) (Neg y) = Pos (sumList x (map (\a -> (-1*a)) y))
 somaBN (Pos x) (Pos y) = Pos (sumList x y)

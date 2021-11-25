@@ -5,7 +5,9 @@ fibRec x = if x < 2 then x else fibRec (x-1) + fibRec (x-2)
 
 --1.3
 
+fibs :: [Integer]
 fibs = 0 : 1 : zipWith (+) fibs (tail fibs)
+fibLista :: Int -> Integer
 fibLista n = fibs !! n
 
 {-

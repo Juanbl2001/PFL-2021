@@ -12,13 +12,13 @@ isNeg :: String -> String
 isNeg xs = if head xs == '-' then drop 1 xs else xs
 
 checkSignal :: String -> Bool
-checkSignal xs = if head xs == '-' then True else False
+checkSignal xs = head xs == '-'
 
 scanner :: String -> BigNumber
 scanner xs = if checkSignal xs then Neg (reverse (map digitToInt (isNeg xs))) else Pos (reverse (map digitToInt (isNeg xs)))
 
 --2.3
-output :: BigNumber -> String 
+output :: BigNumber -> String
 output (Pos x) = map intToDigit (reverse x)
 output (Neg x) =  "-" ++ map intToDigit (reverse x)
 
@@ -46,7 +46,8 @@ sub x [] c
     | c == 0    = x
     | otherwise = sub x [c] 0
 sub (x:xs) (y:ys) c = dig : sub xs ys rst
-    where sum = if x >= y then x - y - c else (x+10) - y - c --x + y + c    -- find the sum of the digits plus the carry
+    where sum = if x >= y then x - y - c else x+10 - y - c --x + y + c    -- find the sum of the digits plus the carry
+
           -- these two lines can also be written as (rst, dig) = sum `divMod` 10
           dig = sum `mod` 10 -- get the last digit
           rst = if x >= y then 0 else 1 -- get the rest of the digits (the new carry)
@@ -57,25 +58,28 @@ sumList = auxSoma 0
 subList :: [Int] -> [Int] -> [Int]
 subList x y = sub x y 0
 
-compareList :: [Int] -> [Int] -> Bool 
-compareList (x:xs) (y:ys) | x == y = compareList xs ys 
-                          | x > y = True 
+compareList :: [Int] -> [Int] -> Bool
+compareList a b = (a==b) || compareList2 a b
+
+compareList2 :: [Int] -> [Int] -> Bool
+compareList2 (x:xs) (y:ys) | x == y = compareList2 xs ys
+                          | x > y = True
                           |otherwise = False
 
 clearZero :: [Int] -> [Int]
-clearZero xs = if last xs == 0 then take (length xs - 1) xs else xs 
+clearZero xs = if last xs == 0 && length xs /= 1 then clearZero (take (length xs - 1) xs) else xs
 
 somaBN :: BigNumber -> BigNumber -> BigNumber
-somaBN (Neg x) (Neg y) = Neg (sumList (reverse x) (reverse y))
-somaBN (Neg x) (Pos y) = if length x > length y || length x == length y && compareList x y then Neg (clearZero (subList (reverse x) (reverse y))) else Pos (clearZero(sumList (reverse x) (reverse y)))
-somaBN (Pos x) (Neg y) = if length x > length y || length x == length y && compareList x y then Pos (clearZero(subList (reverse x) (reverse y))) else Neg (clearZero(sumList (reverse x) (reverse y)))
-somaBN (Pos x) (Pos y) = Pos (sumList (reverse x) (reverse y))
+somaBN (Neg x) (Neg y) = Neg (reverse (sumList (reverse x) (reverse y)))
+somaBN (Neg x) (Pos y) = if length x > length y || (length x == length y && compareList x y) then Neg (reverse(clearZero (subList (reverse x) (reverse y)))) else Pos (reverse(clearZero(subList (reverse y)(reverse x))))
+somaBN (Pos x) (Neg y) = if length x > length y || (length x == length y && compareList x y) then Pos (reverse(clearZero (subList (reverse x) (reverse y)))) else Neg (reverse(clearZero(subList (reverse y) (reverse x))))
+somaBN (Pos x) (Pos y) = Pos (reverse (sumList (reverse x) (reverse y)))
 
 
 
 --2.5
 subBN :: BigNumber -> BigNumber -> BigNumber
-subBN (Neg x) (Neg y) = if length x > length y || length x == length y && compareList x y then Neg (clearZero (sumList (reverse x) (reverse y))) else Pos (clearZero(subList (reverse x) (reverse y)))
-subBN (Neg x) (Pos y) =  Neg (sumList (reverse x) (reverse y))
-subBN (Pos x) (Neg y) = Pos (sumList (reverse x) (reverse y))
-subBN (Pos x) (Pos y) = if length x > length y || length x == length y && compareList x y then Pos (clearZero(subList (reverse x) (reverse y))) else Neg (clearZero(sumList (reverse x) (reverse y)))
+subBN (Neg x) (Neg y) = if length x > length y || length x == length y && compareList x y then Neg (reverse(clearZero (subList (reverse x) (reverse y)))) else Pos (reverse(clearZero(subList (reverse y) (reverse x))))
+subBN (Neg x) (Pos y) =  Neg (reverse(sumList (reverse x) (reverse y)))
+subBN (Pos x) (Neg y) = Pos (reverse(sumList (reverse x) (reverse y)))
+subBN (Pos x) (Pos y) = if length x > length y || length x == length y && compareList x y then Pos (reverse(clearZero(subList (reverse x) (reverse y)))) else Neg (reverse(clearZero(subList (reverse y) (reverse x))))

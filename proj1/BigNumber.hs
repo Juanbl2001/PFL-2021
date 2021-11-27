@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 import Data.Char
 import Distribution.Simple.Command (commandParseArgs)
 import Text.XHtml (clear)
@@ -100,3 +101,15 @@ mulBN :: BigNumber -> BigNumber -> BigNumber
 --mulBN (Pos x) (Pos y) = Pos (sumList (zipWith (*) x y) (zipWith (*) (reverse x) y))
 mulBN (Neg x) (Neg y) = Pos (auxMult (listOfN 1) y x (listOfN 1))
 mulBN (Pos x) (Pos y) = Pos (auxMult (listOfN 1) y x (listOfN 1))
+mulBN (Pos x) (Neg y) = Neg (auxMult (listOfN 1) y x (listOfN 1))
+mulBN (Neg x) (Pos y) = Neg (auxMult (listOfN 1) y x (listOfN 1))
+
+
+
+
+auxDiv x y n = if length x > length y || length x == length y && compareList x y then auxDiv (reverse(clearZero(subList (reverse x) (reverse y)))) y (sumList (reverse n) [1]) else [reverse n,x] --Sum value to itself y times, n is a counter
+
+divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
+divBN (Pos x) (Pos y) =
+                    let n = auxDiv x y (listOfN 1)
+                    in (Pos (head n), Pos (n !! 1))

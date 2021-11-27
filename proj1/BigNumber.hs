@@ -59,7 +59,7 @@ subList :: [Int] -> [Int] -> [Int]
 subList x y = sub x y 0
 
 compareList :: [Int] -> [Int] -> Bool
-compareList a b = (a==b) || compareList2 a b
+compareList a b = a==b || compareList2 a b
 
 compareList2 :: [Int] -> [Int] -> Bool
 compareList2 (x:xs) (y:ys) | x == y = compareList2 xs ys
@@ -71,8 +71,8 @@ clearZero xs = if last xs == 0 && length xs /= 1 then clearZero (take (length xs
 
 somaBN :: BigNumber -> BigNumber -> BigNumber
 somaBN (Neg x) (Neg y) = Neg (reverse (sumList (reverse x) (reverse y)))
-somaBN (Neg x) (Pos y) = if length x > length y || (length x == length y && compareList x y) then Neg (reverse(clearZero (subList (reverse x) (reverse y)))) else Pos (reverse(clearZero(subList (reverse y)(reverse x))))
-somaBN (Pos x) (Neg y) = if length x > length y || (length x == length y && compareList x y) then Pos (reverse(clearZero (subList (reverse x) (reverse y)))) else Neg (reverse(clearZero(subList (reverse y) (reverse x))))
+somaBN (Neg x) (Pos y) = if length x > length y || length x == length y && compareList x y then Neg (reverse(clearZero (subList (reverse x) (reverse y)))) else Pos (reverse(clearZero(subList (reverse y)(reverse x))))
+somaBN (Pos x) (Neg y) = if length x > length y || length x == length y && compareList x y then Pos (reverse(clearZero (subList (reverse x) (reverse y)))) else Neg (reverse(clearZero(subList (reverse y) (reverse x))))
 somaBN (Pos x) (Pos y) = Pos (reverse (sumList (reverse x) (reverse y)))
 
 
@@ -90,9 +90,13 @@ listOfN :: Int -> [Int] --creates lists with n zeros
 listOfN n = replicate n 0
 
 cartProd :: Num a => [a] -> [a] -> [a] --multiply each number by each other and store in position of sum of 10´s
-cartProd xs ys = [x*y | x <- xs, y <- ys] --ex: 700*10 -> store in position 2+1 (3), finally use the sumList and add to zero
+cartProd xs ys = let n = listOfN (length xs + length ys)
+                in [x*y | x <- xs, y <- ys] --ex: 700*10 -> store in position 2+1 (3), finally use the sumList and add to zero
+
+auxMult :: [Int] -> [Int] -> [Int] -> [Int] -> [Int]
+auxMult f x y n = if n /= y then auxMult (reverse (sumList (reverse f) (reverse x))) x y (sumList (reverse n) [1]) else f --Sum value to itself y times, n is a counter
 
 mulBN :: BigNumber -> BigNumber -> BigNumber
 --mulBN (Pos x) (Pos y) = Pos (sumList (zipWith (*) x y) (zipWith (*) (reverse x) y))
-mulBN (Neg x) (Neg y) = Neg (sumList (zipWith (*) x y) (zipWith (*) (reverse x) y))
-mulBN (Pos x) (Pos y) = Pos ((cartProd x y))
+mulBN (Neg x) (Neg y) = Pos (auxMult (listOfN 1) y x (listOfN 1))
+mulBN (Pos x) (Pos y) = Pos (auxMult (listOfN 1) y x (listOfN 1))

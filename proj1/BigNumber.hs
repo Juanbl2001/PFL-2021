@@ -83,3 +83,16 @@ subBN (Neg x) (Neg y) = if length x > length y || length x == length y && compar
 subBN (Neg x) (Pos y) =  Neg (reverse(sumList (reverse x) (reverse y)))
 subBN (Pos x) (Neg y) = Pos (reverse(sumList (reverse x) (reverse y)))
 subBN (Pos x) (Pos y) = if length x > length y || length x == length y && compareList x y then Pos (reverse(clearZero(subList (reverse x) (reverse y)))) else Neg (reverse(clearZero(subList (reverse y) (reverse x))))
+
+--2.6
+
+listOfN :: Int -> [Int] --creates lists with n zeros
+listOfN n = replicate n 0
+
+cartProd :: Num a => [a] -> [a] -> [a] --multiply each number by each other and store in position of sum of 10´s
+cartProd xs ys = [x*y | x <- xs, y <- ys] --ex: 700*10 -> store in position 2+1 (3), finally use the sumList and add to zero
+
+mulBN :: BigNumber -> BigNumber -> BigNumber
+--mulBN (Pos x) (Pos y) = Pos (sumList (zipWith (*) x y) (zipWith (*) (reverse x) y))
+mulBN (Neg x) (Neg y) = Neg (sumList (zipWith (*) x y) (zipWith (*) (reverse x) y))
+mulBN (Pos x) (Pos y) = Pos ((cartProd x y))

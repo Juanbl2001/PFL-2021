@@ -95,21 +95,30 @@ cartProd xs ys = let n = listOfN (length xs + length ys)
                 in [x*y | x <- xs, y <- ys] --ex: 700*10 -> store in position 2+1 (3), finally use the sumList and add to zero
 
 auxMult :: [Int] -> [Int] -> [Int] -> [Int] -> [Int]
-auxMult f x y n = if n /= y then auxMult (reverse (sumList (reverse f) (reverse x))) x y (sumList (reverse n) [1]) else f --Sum value to itself y times, n is a counter
+auxMult f x y n = if length y > length n || length n == length y && compareList y n then auxMult (reverse (sumList (reverse f) (reverse x))) x y (sumList (reverse n) [1]) else f --Sum value to itself y times, n is a counter
 
 mulBN :: BigNumber -> BigNumber -> BigNumber
 --mulBN (Pos x) (Pos y) = Pos (sumList (zipWith (*) x y) (zipWith (*) (reverse x) y))
 mulBN (Neg x) (Neg y) = Pos (auxMult (listOfN 1) y x (listOfN 1))
-mulBN (Pos x) (Pos y) = Pos (auxMult (listOfN 1) y x (listOfN 1))
+mulBN (Pos x) (Pos y) = if length y > length x || length x == length y && compareList y x then Pos (auxMult (listOfN 1) y x (listOfN 1)) else Pos (auxMult (listOfN 1) x y (listOfN 1))
 mulBN (Pos x) (Neg y) = Neg (auxMult (listOfN 1) y x (listOfN 1))
 mulBN (Neg x) (Pos y) = Neg (auxMult (listOfN 1) y x (listOfN 1))
 
 
 
-
-auxDiv x y n = if length x > length y || length x == length y && compareList x y then auxDiv (reverse(clearZero(subList (reverse x) (reverse y)))) y (sumList (reverse n) [1]) else [reverse n,x] --Sum value to itself y times, n is a counter
+auxDiv :: [Int] -> [Int] -> [Int] -> [[Int]]
+auxDiv x y n = if length x > length y || length x == length y && compareList x y then auxDiv (reverse(clearZero(subList (reverse x) (reverse y)))) y (sumList (reverse n) [1])  else [n,x] --Sum value to itself y times, n is a counter
 
 divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
-divBN (Pos x) (Pos y) =
-                    let n = auxDiv x y (listOfN 1)
-                    in (Pos (head n), Pos (n !! 1))
+divBN (Pos x) (Pos y) = (Pos (head t), Pos (t !! 1)) where t = auxDiv x y (listOfN 1)
+
+main :: IO ()
+main = do
+print"This is div:"
+print(divBN (Pos [1,2,3]) (Pos [1,2]))
+print(divBN (Pos [2,4,3]) (Pos [1,6]))
+print(divBN (Pos [1,2,1]) (Pos [1,1]))
+print(divBN (Pos [1,2,0]) (Pos [2,4]))
+print"This is mul:"
+print(mulBN (Pos [9,1,1]) (Pos [1,1,1]))
+print(mulBN (Pos [6,2]) (Pos [7,4]))

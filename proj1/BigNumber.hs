@@ -107,6 +107,10 @@ mulBN (Neg x) (Neg y) = Pos (auxMult (Pos [0]) (Pos x) (somaBN (Pos y) (Neg [1])
 mulBN (Pos x) (Neg y) = Neg (auxMult (Pos [0]) (Pos x) (somaBN (Pos y) (Neg [1])))
 mulBN (Neg x) (Pos y) = Neg (auxMult (Pos [0]) (Pos x) (somaBN (Pos y) (Neg [1])))
 
+
+clearZeros :: BigNumber -> BigNumber
+clearZeros (Pos xs) = if head xs == 0 then clearZeros (Pos (drop 1 xs)) else Pos xs
+
 checkBNSignal :: BigNumber -> Bool
 checkBNSignal (Pos x) = True
 checkBNSignal (Neg x) = False
@@ -115,9 +119,8 @@ auxDiv :: BigNumber -> BigNumber -> BigNumber -> (BigNumber,BigNumber)
 auxDiv x y n = if checkBNSignal(subBN x y) then auxDiv (subBN x y) y (somaBN n (Pos [1])) else (n,x)
 
 divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
--- divBN (Pos x) (Pos y) = (Pos (head t), Pos (t !! 1)) where t = auxDiv x y (listOfN 1)
 divBN x y = (n, m)
-    where (n, m) = auxDiv x y (Pos (listOfN 1))
+    where (n, m) = auxDiv (clearZeros x) (clearZeros  y) (Pos (listOfN 1))
 
 succ :: BigNumber -> BigNumber
 succ x = somaBN x (Pos [1])
@@ -141,18 +144,19 @@ toEnum x = if x > (-1) then Pos (digs x) else Neg (digs x)
 
 safeDivBN :: BigNumber -> BigNumber -> Maybe (BigNumber, BigNumber)
 safeDivBN (Pos x) (Pos y) = if last y == 0 then Nothing  else Just (n, m)
-    where (n,m) = auxDiv (Pos x)  (Pos y) (Pos (listOfN 1))
+    where (n,m) = auxDiv (clearZeros(Pos x))  (clearZeros(Pos y)) (Pos (listOfN 1))
 
--- main :: IO ()
--- main = do
--- --print"This is div:"
--- --print(checkBNSignal(subBN (Pos [1,1,0]) (Pos [1,1])))
--- --print(divBN (Pos [1,2,0,3,2,4,5,3,5]) (Pos [2,2,1,3,5]))
--- --print(somaBN (Pos [1]) (Pos [1]))
--- --print(divBN (Pos [1,2,4]) (Pos [1,2]))
--- --print(divBN (Pos [2,4,6]) (Pos [1,6]))
--- --print(divBN (Pos [1,2,1]) (Pos [1,1]))
--- -- print(divBN (Pos [1,2,0]) (Pos [2,4]))
--- print"This is mul:"
--- print(mulBN (Pos [9,1,5,3,4,2,4,5,6,4]) (Pos [1,2,5,6,3,2,4]))
--- -- print(mulBN (Pos [6,2]) (Pos [7,4]))
+
+main :: IO ()
+main = do
+print"This is div:"
+print(checkBNSignal(subBN (Pos [1,1,0]) (Pos [1,1])))
+print(divBN (Pos [1,2,0,3,2,4,5,3,5]) (Pos [2,2,1,3,5]))
+print(somaBN (Pos [1]) (Pos [1]))
+print(divBN (Pos [1,2,4]) (Pos [1,2]))
+print(divBN (Pos [2,4,6]) (Pos [1,6]))
+print(divBN (Pos [1,2,1]) (Pos [1,1]))
+print(divBN (Pos [1,2,0]) (Pos [2,4]))
+print"This is mul:"
+print(mulBN (Pos [9,1,5,3,4,2,4,5,6,4]) (Pos [1,2,5,6,3,2,4]))
+print(mulBN (Pos [6,2]) (Pos [7,4]))

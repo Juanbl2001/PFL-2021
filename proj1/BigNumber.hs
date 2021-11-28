@@ -125,6 +125,19 @@ succ x = somaBN x (Pos [1])
 pred :: BigNumber -> BigNumber
 pred x = subBN x (Pos [1])
 
+digs :: Integral x => x -> [x]
+digs 0 = []
+digs x = digs (x `div` 10) ++ [x `mod` 10]
+
+fromEnum :: BigNumber -> Int
+fromEnum (Pos x)= foldl addDigit 0 x
+   where addDigit num d = 10*num + d
+fromEnum (Neg x)= foldl addDigit 0 x
+   where addDigit num d = 10*num + d
+
+toEnum :: Int -> BigNumber
+toEnum x = if x > (-1) then Pos (digs x) else Neg (digs x)
+
 -- main :: IO ()
 -- main = do
 -- --print"This is div:"

@@ -37,13 +37,19 @@ fibRecBN :: BigNumber -> BigNumber
 fibRecBN (Pos x) = if checkBNSignal (subBN (Pos [1]) (Pos x)) then Pos x else somaBN (fibRecBN (subBN(Pos x)(Pos [2]))) (fibRecBN (subBN(Pos x)(Pos [1])))
 
 
-fibListaBN :: BigNumber -> BigNumber 
-fibListaBN (Pos x) = last (map fibListaBN'(zipWith (somaBN)
-  where 
-      fibListaBN' [0] = Pos [0]
-      fibListaBN' [1] = Pos [1]
-      fibListaBN' [n] = somaBN (fibListaBN (subBN(Pos n)(Pos [2]))) (fibListaBN (subBN(Pos n)(Pos [1])))
+--fibListaBN :: BigNumber -> BigNumber 
+--fibListaBN (Pos x) = last (map fibListaBN'(zipWith (somaBN (Pos [1]) (Pos x)))
+--  where 
+--      fibListaBN' Pos [0] = Pos [0]
+--      fibListaBN' Pos [1] = Pos [1]
+--      fibListaBN' Pos [n] = somaBN (fibListaBN (subBN(Pos n)(Pos [2]))) (fibListaBN (subBN(Pos n)(Pos [1])))
 
 
-fibListaInfinitaBN :: BigNumber -> BigNumber 
-fibListaInfinitaBN (Pos x) = fibs !! x where fibs = (Pos [0]) : (Pos [1]) : zipWith (somaBN ([a]) ([b])
+
+
+fromDigits :: [Int] -> Int
+fromDigits = foldl addDigit 0
+   where addDigit num d = 10*num + d
+
+fibListaInfinitaBN :: BigNumber -> BigNumber
+fibListaInfinitaBN (Pos x) = fibs !! fromDigits x where fibs = Pos [0] : Pos [1] : zipWith somaBN fibs (tail fibs)

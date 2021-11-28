@@ -97,28 +97,15 @@ cartProd :: Num a => [a] -> [a] -> [a] --multiply each number by each other and 
 cartProd xs ys = let n = listOfN (length xs + length ys)
                 in [x*y | x <- xs, y <- ys] --ex: 700*10 -> store in position 2+1 (3), finally use the sumList and add to zero
 
-bigToInt :: BigNumber -> [Int]
-bigToInt (Pos x) = x
-
 auxMult :: BigNumber -> BigNumber -> BigNumber -> [Int]
 auxMult (Pos f) x y = if checkBNSignal y then auxMult(subBN x (Neg f)) x (somaBN y (Neg [1])) else f --Sum value to itself y times, n is a counter
-
---mulAux :: [Int] -> [Int] -> [Int]
---mulAux x y = if length y > length x && checkBNSignal(subBN (Pos x) (Pos [1])) then
 
 
 mulBN :: BigNumber -> BigNumber -> BigNumber
 mulBN (Pos x) (Pos y) = Pos (auxMult (Pos [0]) (Pos x) (somaBN (Pos y) (Neg [1])))
---mulBN (Pos x) (Pos y) = Pos (sumList (zipWith (*) x y) (zipWith (*) (reverse x) y))
--- mulBN (Neg x) (Neg y) = Pos (auxMult (listOfN 1) y x (listOfN 1))
--- mulBN (Pos x) (Pos y) = if length y > length x || length x == length y && compareList y x then Pos (auxMult (listOfN 1) y x (listOfN 1)) else Pos (auxMult (listOfN 1) x y (listOfN 1))
--- mulBN (Pos x) (Neg y) = Neg (auxMult (listOfN 1) y x (listOfN 1))
--- mulBN (Neg x) (Pos y) = Neg (auxMult (listOfN 1) y x (listOfN 1))
-
-
-
--- auxDiv :: [Int] -> [Int] -> [Int] -> [[Int]]
--- auxDiv x y n = if length x > length y || length x == length y && compareList x y then auxDiv (reverse(clearZero(subList (reverse x) (reverse y)))) y (sumList (reverse n) [1])  else [n,x] --Sum value to itself y times, n is a counter
+mulBN (Neg x) (Neg y) = Pos (auxMult (Pos [0]) (Pos x) (somaBN (Pos y) (Neg [1])))
+mulBN (Pos x) (Neg y) = Neg (auxMult (Pos [0]) (Pos x) (somaBN (Pos y) (Neg [1])))
+mulBN (Neg x) (Pos y) = Neg (auxMult (Pos [0]) (Pos x) (somaBN (Pos y) (Neg [1])))
 
 checkBNSignal :: BigNumber -> Bool
 checkBNSignal (Pos x) = True
@@ -132,6 +119,11 @@ divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
 divBN x y = (n, m)
     where (n, m) = auxDiv x y (Pos (listOfN 1))
 
+succ :: BigNumber -> BigNumber
+succ x = somaBN x (Pos [1])
+
+pred :: BigNumber -> BigNumber
+pred x = subBN x (Pos [1])
 
 -- main :: IO ()
 -- main = do

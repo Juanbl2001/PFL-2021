@@ -97,28 +97,43 @@ cartProd xs ys = let n = listOfN (length xs + length ys)
 auxMult :: [Int] -> [Int] -> [Int] -> [Int] -> [Int]
 auxMult f x y n = if length y > length n || length n == length y && compareList y n then auxMult (reverse (sumList (reverse f) (reverse x))) x y (sumList (reverse n) [1]) else f --Sum value to itself y times, n is a counter
 
+mulAux :: BigNumber -> BigNumber -> BigNumber
+mulAux (Pos x) (Pos y) = if length y > length x && checkBNSignal(subBN (Pos x) (Pos [1])) then mulAux(somaBN (Pos y) (Pos y)) (subBN (Pos x) (Pos [1])) else  mulAux(somaBN (Pos x) (Pos x)) (subBN (Pos y) (Pos [1]))
+
+
 mulBN :: BigNumber -> BigNumber -> BigNumber
+mulBN (Pos x) (Pos y) = mulAux (Pos x) (Pos y)
 --mulBN (Pos x) (Pos y) = Pos (sumList (zipWith (*) x y) (zipWith (*) (reverse x) y))
-mulBN (Neg x) (Neg y) = Pos (auxMult (listOfN 1) y x (listOfN 1))
-mulBN (Pos x) (Pos y) = if length y > length x || length x == length y && compareList y x then Pos (auxMult (listOfN 1) y x (listOfN 1)) else Pos (auxMult (listOfN 1) x y (listOfN 1))
-mulBN (Pos x) (Neg y) = Neg (auxMult (listOfN 1) y x (listOfN 1))
-mulBN (Neg x) (Pos y) = Neg (auxMult (listOfN 1) y x (listOfN 1))
+-- mulBN (Neg x) (Neg y) = Pos (auxMult (listOfN 1) y x (listOfN 1))
+-- mulBN (Pos x) (Pos y) = if length y > length x || length x == length y && compareList y x then Pos (auxMult (listOfN 1) y x (listOfN 1)) else Pos (auxMult (listOfN 1) x y (listOfN 1))
+-- mulBN (Pos x) (Neg y) = Neg (auxMult (listOfN 1) y x (listOfN 1))
+-- mulBN (Neg x) (Pos y) = Neg (auxMult (listOfN 1) y x (listOfN 1))
 
 
 
-auxDiv :: [Int] -> [Int] -> [Int] -> [[Int]]
-auxDiv x y n = if length x > length y || length x == length y && compareList x y then auxDiv (reverse(clearZero(subList (reverse x) (reverse y)))) y (sumList (reverse n) [1])  else [n,x] --Sum value to itself y times, n is a counter
+-- auxDiv :: [Int] -> [Int] -> [Int] -> [[Int]]
+-- auxDiv x y n = if length x > length y || length x == length y && compareList x y then auxDiv (reverse(clearZero(subList (reverse x) (reverse y)))) y (sumList (reverse n) [1])  else [n,x] --Sum value to itself y times, n is a counter
+
+checkBNSignal :: BigNumber -> Bool 
+checkBNSignal (Pos x) = True 
+checkBNSignal (Neg x) = False 
+
+auxDiv :: BigNumber -> BigNumber -> Int -> (Int,BigNumber)
+auxDiv (Pos x) (Pos y) n = if length x > length y && checkBNSignal(subBN (Pos x) (Pos y)) then auxDiv (subBN (Pos x) (Pos y)) (Pos y) (n+1) else (n - 1,Pos x)
 
 divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
-divBN (Pos x) (Pos y) = (Pos (head t), Pos (t !! 1)) where t = auxDiv x y (listOfN 1)
+-- divBN (Pos x) (Pos y) = (Pos (head t), Pos (t !! 1)) where t = auxDiv x y (listOfN 1)
+divBN (Pos x) (Pos y) = (Pos [n], m)
+    where (n, m) = auxDiv (Pos x) (Pos y) 0
 
-main :: IO ()
-main = do
-print"This is div:"
-print(divBN (Pos [1,2,3]) (Pos [1,2]))
-print(divBN (Pos [2,4,3]) (Pos [1,6]))
-print(divBN (Pos [1,2,1]) (Pos [1,1]))
-print(divBN (Pos [1,2,0]) (Pos [2,4]))
-print"This is mul:"
-print(mulBN (Pos [9,1,1]) (Pos [1,1,1]))
-print(mulBN (Pos [6,2]) (Pos [7,4]))
+
+-- main :: IO ()
+-- main = do
+-- print"This is div:"
+-- print(divBN (Pos [1,2,3]) (Pos [1,2]))
+-- print(divBN (Pos [2,4,3]) (Pos [1,6]))
+-- print(divBN (Pos [1,2,1]) (Pos [1,1]))
+-- print(divBN (Pos [1,2,0]) (Pos [2,4]))
+-- print"This is mul:"
+-- print(mulBN (Pos [9,1,1]) (Pos [1,1,1]))
+-- print(mulBN (Pos [6,2]) (Pos [7,4]))

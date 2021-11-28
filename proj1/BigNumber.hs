@@ -138,6 +138,11 @@ fromEnum (Neg x)= foldl addDigit 0 x
 toEnum :: Int -> BigNumber
 toEnum x = if x > (-1) then Pos (digs x) else Neg (digs x)
 
+
+safeDivBN :: BigNumber -> BigNumber -> Maybe (BigNumber, BigNumber)
+safeDivBN (Pos x) (Pos y) = if last y == 0 then Nothing  else Just (n, m)
+    where (n,m) = auxDiv (Pos x)  (Pos y) (Pos (listOfN 1))
+
 -- main :: IO ()
 -- main = do
 -- --print"This is div:"

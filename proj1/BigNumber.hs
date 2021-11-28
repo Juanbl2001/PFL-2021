@@ -1,4 +1,7 @@
 {-# LANGUAGE DataKinds #-}
+module BigNumber where
+
+
 import Data.Char
 import Distribution.Simple.Command (commandParseArgs)
 import Text.XHtml (clear)
@@ -130,16 +133,16 @@ divBN x y = (n, m)
     where (n, m) = auxDiv x y (Pos (listOfN 1))
 
 
-main :: IO ()
-main = do
---print"This is div:"
---print(checkBNSignal(subBN (Pos [1,1,0]) (Pos [1,1])))
---print(divBN (Pos [1,2,0,3,2,4,5,3,5]) (Pos [2,2,1,3,5]))
---print(somaBN (Pos [1]) (Pos [1]))
---print(divBN (Pos [1,2,4]) (Pos [1,2]))
---print(divBN (Pos [2,4,6]) (Pos [1,6]))
---print(divBN (Pos [1,2,1]) (Pos [1,1]))
--- print(divBN (Pos [1,2,0]) (Pos [2,4]))
-print"This is mul:"
-print(mulBN (Pos [9,1,5,3,4,2,4,5,6,4]) (Pos [1,2,5,6,3,2,4]))
--- print(mulBN (Pos [6,2]) (Pos [7,4]))
+-- main :: IO ()
+-- main = do
+-- --print"This is div:"
+-- --print(checkBNSignal(subBN (Pos [1,1,0]) (Pos [1,1])))
+-- --print(divBN (Pos [1,2,0,3,2,4,5,3,5]) (Pos [2,2,1,3,5]))
+-- --print(somaBN (Pos [1]) (Pos [1]))
+-- --print(divBN (Pos [1,2,4]) (Pos [1,2]))
+-- --print(divBN (Pos [2,4,6]) (Pos [1,6]))
+-- --print(divBN (Pos [1,2,1]) (Pos [1,1]))
+-- -- print(divBN (Pos [1,2,0]) (Pos [2,4]))
+-- print"This is mul:"
+-- print(mulBN (Pos [9,1,5,3,4,2,4,5,6,4]) (Pos [1,2,5,6,3,2,4]))
+-- -- print(mulBN (Pos [6,2]) (Pos [7,4]))

@@ -43,37 +43,41 @@ auxSoma n (x:xs) (y:ys) = r : auxSoma q xs ys
 
 
 sub :: (Integral a) => [a] -> [a] -> a -> [a]
--- these base cases break down if carry is non-zero
+-- Estes casos base verificam se o resto é diferente de zero
 sub [] x c
-    -- if carry is zero we're fine
+    -- Se o resto é zero estamos bem
     | c == 0    = x
-    -- just sub the carry in as a digit
+    -- só precisamos de substituir o resto como um número
     | otherwise = sub [c] x 0
--- same applies here
+-- aplicamos a mesma lógica aqui
 sub x [] c
     | c == 0    = x
     | otherwise = sub x [c] 0
 sub (x:xs) (y:ys) c = dig : sub xs ys rst
-    where sum = if x >= y then x - y - c else x+10 - y - c --x + y + c    -- find the sum of the digits plus the carry
+    where sum = if x >= y then x - y - c else x+10 - y - c --x + y + c    -- calcula a soma e o resto
 
-          -- these two lines can also be written as (rst, dig) = sum `divMod` 10
-          dig = sum `mod` 10 -- get the last digit
-          rst = if (x-c) >= y then 0 else 1 -- get the rest of the digits (the new carry)
+          dig = sum `mod` 10 -- Obtem o ultimo digito
+          rst = if (x-c) >= y then 0 else 1
 
+--adiciona duas listas
 sumList :: [Int] -> [Int] -> [Int]
 sumList = auxSoma 0
 
+--subtrai duas listas
 subList :: [Int] -> [Int] -> [Int]
 subList x y = sub x y 0
 
+--compara duas listas
 compareList :: [Int] -> [Int] -> Bool
 compareList a b = a==b || compareList2 a b
 
+--auxiliar para comparar (comparamos digito a digito)
 compareList2 :: [Int] -> [Int] -> Bool
 compareList2 (x:xs) (y:ys) | x == y = compareList2 xs ys
                           | x > y = True
                           |otherwise = False
 
+--Utilizado para eliminiar zeros iniciais (Ex: 00781 -> 781)
 clearZero :: [Int] -> [Int]
 clearZero xs = if last xs == 0 && length xs /= 1 then clearZero (take (length xs - 1) xs) else xs
 
@@ -82,8 +86,6 @@ somaBN (Neg x) (Neg y) = Neg (reverse (sumList (reverse x) (reverse y)))
 somaBN (Neg x) (Pos y) = if length x > length y || length x == length y && compareList x y then Neg (reverse(clearZero (subList (reverse x) (reverse y)))) else Pos (reverse(clearZero(subList (reverse y)(reverse x))))
 somaBN (Pos x) (Neg y) = if length x > length y || length x == length y && compareList x y then Pos (reverse(clearZero (subList (reverse x) (reverse y)))) else Neg (reverse(clearZero(subList (reverse y) (reverse x))))
 somaBN (Pos x) (Pos y) = Pos (reverse (sumList (reverse x) (reverse y)))
-
-
 
 --2.5
 subBN :: BigNumber -> BigNumber -> BigNumber
@@ -111,21 +113,25 @@ mulBN (Neg x) (Neg y) = Pos (auxMult (Pos [0]) (Pos x) (somaBN (Pos y) (Neg [1])
 mulBN (Pos x) (Neg y) = Neg (auxMult (Pos [0]) (Pos x) (somaBN (Pos y) (Neg [1])))
 mulBN (Neg x) (Pos y) = Neg (auxMult (Pos [0]) (Pos x) (somaBN (Pos y) (Neg [1])))
 
-
-clearZeros :: BigNumber -> BigNumber
+--Utilizado para eliminiar zeros no final
+clearZeros :: BigNumber -> BigNumber 
 clearZeros (Pos xs) = if head xs == 0 then clearZeros (Pos (drop 1 xs)) else Pos xs
 
+--verificar se é BN é positivo ou negativo
 checkBNSignal :: BigNumber -> Bool
 checkBNSignal (Pos x) = True
 checkBNSignal (Neg x) = False
 
+--ajuda na divisão
 auxDiv :: BigNumber -> BigNumber -> BigNumber -> (BigNumber,BigNumber)
 auxDiv x y n = if checkBNSignal(subBN x y) then auxDiv (subBN x y) y (somaBN n (Pos [1])) else (n,x)
 
+--divide dois valores
 divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
 divBN x y = (n, m)
     where (n, m) = auxDiv (clearZeros x) (clearZeros  y) (Pos (listOfN 1))
 
+--tentativa de alterar o Enum de BigNumber
 succ :: BigNumber -> BigNumber
 succ x = somaBN x (Pos [1])
 
@@ -145,7 +151,7 @@ fromEnum (Neg x)= foldl addDigit 0 x
 toEnum :: Int -> BigNumber
 toEnum x = if x > (-1) then Pos (digs x) else Neg (digs x)
 
-
+--Evita a divisão por 0 em compile-time, não retornando nada. Se o divisor for outro número positivo calcula normalmente.
 safeDivBN :: BigNumber -> BigNumber -> Maybe (BigNumber, BigNumber)
 safeDivBN (Pos x) (Pos y) = if last y == 0 then Nothing  else Just (n, m)
     where (n,m) = auxDiv (clearZeros(Pos x))  (clearZeros(Pos y)) (Pos (listOfN 1))

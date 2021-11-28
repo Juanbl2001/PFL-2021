@@ -51,7 +51,7 @@ sub (x:xs) (y:ys) c = dig : sub xs ys rst
 
           -- these two lines can also be written as (rst, dig) = sum `divMod` 10
           dig = sum `mod` 10 -- get the last digit
-          rst = if x >= y then 0 else 1 -- get the rest of the digits (the new carry)
+          rst = if (x-c) >= y then 0 else 1 -- get the rest of the digits (the new carry)
 
 sumList :: [Int] -> [Int] -> [Int]
 sumList = auxSoma 0
@@ -94,15 +94,18 @@ cartProd :: Num a => [a] -> [a] -> [a] --multiply each number by each other and 
 cartProd xs ys = let n = listOfN (length xs + length ys)
                 in [x*y | x <- xs, y <- ys] --ex: 700*10 -> store in position 2+1 (3), finally use the sumList and add to zero
 
-auxMult :: [Int] -> [Int] -> [Int] -> [Int] -> [Int]
-auxMult f x y n = if length y > length n || length n == length y && compareList y n then auxMult (reverse (sumList (reverse f) (reverse x))) x y (sumList (reverse n) [1]) else f --Sum value to itself y times, n is a counter
+bigToInt :: BigNumber -> [Int]
+bigToInt (Pos x) = x
 
-mulAux :: BigNumber -> BigNumber -> BigNumber
-mulAux (Pos x) (Pos y) = if length y > length x && checkBNSignal(subBN (Pos x) (Pos [1])) then mulAux(somaBN (Pos y) (Pos y)) (subBN (Pos x) (Pos [1])) else  mulAux(somaBN (Pos x) (Pos x)) (subBN (Pos y) (Pos [1]))
+auxMult :: BigNumber -> BigNumber -> BigNumber -> [Int]
+auxMult (Pos f) x y = if checkBNSignal y then auxMult(subBN x (Neg f)) x (somaBN y (Neg [1])) else f --Sum value to itself y times, n is a counter
+
+--mulAux :: [Int] -> [Int] -> [Int]
+--mulAux x y = if length y > length x && checkBNSignal(subBN (Pos x) (Pos [1])) then
 
 
 mulBN :: BigNumber -> BigNumber -> BigNumber
-mulBN (Pos x) (Pos y) = mulAux (Pos x) (Pos y)
+mulBN (Pos x) (Pos y) = Pos (auxMult (Pos [0]) (Pos x) (somaBN (Pos y) (Neg [1])))
 --mulBN (Pos x) (Pos y) = Pos (sumList (zipWith (*) x y) (zipWith (*) (reverse x) y))
 -- mulBN (Neg x) (Neg y) = Pos (auxMult (listOfN 1) y x (listOfN 1))
 -- mulBN (Pos x) (Pos y) = if length y > length x || length x == length y && compareList y x then Pos (auxMult (listOfN 1) y x (listOfN 1)) else Pos (auxMult (listOfN 1) x y (listOfN 1))
@@ -114,26 +117,29 @@ mulBN (Pos x) (Pos y) = mulAux (Pos x) (Pos y)
 -- auxDiv :: [Int] -> [Int] -> [Int] -> [[Int]]
 -- auxDiv x y n = if length x > length y || length x == length y && compareList x y then auxDiv (reverse(clearZero(subList (reverse x) (reverse y)))) y (sumList (reverse n) [1])  else [n,x] --Sum value to itself y times, n is a counter
 
-checkBNSignal :: BigNumber -> Bool 
-checkBNSignal (Pos x) = True 
-checkBNSignal (Neg x) = False 
+checkBNSignal :: BigNumber -> Bool
+checkBNSignal (Pos x) = True
+checkBNSignal (Neg x) = False
 
-auxDiv :: BigNumber -> BigNumber -> Int -> (Int,BigNumber)
-auxDiv (Pos x) (Pos y) n = if length x > length y && checkBNSignal(subBN (Pos x) (Pos y)) then auxDiv (subBN (Pos x) (Pos y)) (Pos y) (n+1) else (n - 1,Pos x)
+auxDiv :: BigNumber -> BigNumber -> BigNumber -> (BigNumber,BigNumber)
+auxDiv x y n = if checkBNSignal(subBN x y) then auxDiv (subBN x y) y (somaBN n (Pos [1])) else (n,x)
 
 divBN :: BigNumber -> BigNumber -> (BigNumber, BigNumber)
 -- divBN (Pos x) (Pos y) = (Pos (head t), Pos (t !! 1)) where t = auxDiv x y (listOfN 1)
-divBN (Pos x) (Pos y) = (Pos [n], m)
-    where (n, m) = auxDiv (Pos x) (Pos y) 0
+divBN x y = (n, m)
+    where (n, m) = auxDiv x y (Pos (listOfN 1))
 
 
--- main :: IO ()
--- main = do
--- print"This is div:"
--- print(divBN (Pos [1,2,3]) (Pos [1,2]))
--- print(divBN (Pos [2,4,3]) (Pos [1,6]))
--- print(divBN (Pos [1,2,1]) (Pos [1,1]))
+main :: IO ()
+main = do
+--print"This is div:"
+--print(checkBNSignal(subBN (Pos [1,1,0]) (Pos [1,1])))
+--print(divBN (Pos [1,2,0,3,2,4,5,3,5]) (Pos [2,2,1,3,5]))
+--print(somaBN (Pos [1]) (Pos [1]))
+--print(divBN (Pos [1,2,4]) (Pos [1,2]))
+--print(divBN (Pos [2,4,6]) (Pos [1,6]))
+--print(divBN (Pos [1,2,1]) (Pos [1,1]))
 -- print(divBN (Pos [1,2,0]) (Pos [2,4]))
--- print"This is mul:"
--- print(mulBN (Pos [9,1,1]) (Pos [1,1,1]))
+print"This is mul:"
+print(mulBN (Pos [9,1,5,3,4,2,4,5,6,4]) (Pos [1,2,5,6,3,2,4]))
 -- print(mulBN (Pos [6,2]) (Pos [7,4]))

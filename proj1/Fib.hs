@@ -37,18 +37,19 @@ fibRecBN :: BigNumber -> BigNumber
 fibRecBN (Pos x) = if checkBNSignal (subBN (Pos [1]) (Pos x)) then Pos x else somaBN (fibRecBN (subBN(Pos x)(Pos [2]))) (fibRecBN (subBN(Pos x)(Pos [1])))
 
 
--- fibListaBN :: BigNumber -> BigNumber 
--- fibListaBN (Pos x) = last (map BigNumber.succ [Pos [0]..Pos x])
+fibListaBN :: BigNumber  -> BigNumber
+fibListaBN (Pos [0]) = Pos [0]
+fibListaBN (Pos [1]) = Pos [1]
+fibListaBN (Pos n) = Pos (digs(BigNumber.fromEnum(fibRecBN(Pos n))))
+
+--Função que tentámos inicialmente, mas não conseguimos implementar para obter o valor pretendido
+-- fibListaBN :: BigNumber -> BigNumber
+-- fibListaBN (Pos x) = Pos (digs(last (map fibListaBN' [0..aux])))
 --   where 
---       fibListaBN' (Pos [0]) = Pos [0]
---       fibListaBN' (Pos [1]) = Pos [1]
---       fibListaBN' (Pos n) = somaBN (fibListaBN (subBN(Pos n)(Pos [2]))) (fibListaBN (subBN(Pos n)(Pos [1])))
-
-fibListaBN :: Int -> BigNumber
-fibListaBN 0 = Pos [0]
-fibListaBN 1 = Pos [1]
-fibListaBN n = Pos [fibRec (n-1) | n <- [1..n+1]]
-
+--     fibListaBN' 0 = 0
+--     fibListaBN' 1 = 1
+--     fibListaBN' n = BigNumber.fromEnum(somaBN (fibListaBN (subBN(Pos n)(Pos [2]))) (fibListaBN (subBN(Pos n)(Pos [1]))))
+--     aux = BigNumber.fromEnum (Pos x)
 
 fibListaInfinitaBN :: BigNumber -> BigNumber
 fibListaInfinitaBN (Pos x) = fibs !! BigNumber.fromEnum (Pos x) where fibs = Pos [0] : Pos [1] : zipWith somaBN fibs (tail fibs)

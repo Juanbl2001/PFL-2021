@@ -12,22 +12,27 @@ data BigNumber = Pos [Int]
                 deriving (Eq, Show)
 
 --2.2
+--Se a string dada como input for um número negativo, retira o símbolo -
 isNeg :: String -> String
 isNeg xs = if head xs == '-' then drop 1 xs else xs
 
+--Verifica se a string dada como input é um número negativo, se for retorna True se não retorna Falso
 checkSignal :: String -> Bool
 checkSignal xs = head xs == '-'
 
+--Converte uma string em big-number
 scanner :: String -> BigNumber
 scanner xs = if checkSignal xs then Neg (reverse (map digitToInt (isNeg xs))) else Pos (reverse (map digitToInt (isNeg xs)))
 
 --2.3
+-- Converte um big-number numa string
 output :: BigNumber -> String
 output (Pos x) = map intToDigit (reverse x)
 output (Neg x) =  "-" ++ map intToDigit (reverse x)
 
 
 --2.4
+--
 auxSoma :: Int -> [Int] -> [Int] -> [Int]
 auxSoma 0 [] [] = []
 auxSoma n [] [] = [n]
@@ -36,9 +41,8 @@ auxSoma n [] xs = auxSoma n [0] xs
 auxSoma n (x:xs) (y:ys) = r : auxSoma q xs ys
     where (q,r) = quotRem (x+y+n) 10
 
--- change Num to Integral because we need to work with integers
+
 sub :: (Integral a) => [a] -> [a] -> a -> [a]
---        we need to sub a carry now ^
 -- these base cases break down if carry is non-zero
 sub [] x c
     -- if carry is zero we're fine

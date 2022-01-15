@@ -9,7 +9,7 @@ Displays initial menu reads the option input and checks if it is valid and acts 
 */
 %Chooses the mode of the game
 
-electMenuOption(NumOptions, ValidOption) :-
+selectMenuOption(NumOptions, ValidOption) :-
     write('\nInsert option:\n'),
     repeat,
     readMenuOption(OptionInput),

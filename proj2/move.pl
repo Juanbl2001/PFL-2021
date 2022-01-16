@@ -1,7 +1,43 @@
 
 
+%move(+GameState, +Player, +Move, -NewGameState)
+/*
+Move when available moves (and in this case Move is [SelectedRow-SelectedColumn, MoveRow-MoveColumn]),
+replacing on board the selected position with empty space and moving position with player piece,
+returning the board after the move
+*/
 move(GameState, Player, Move, NewGameState):-
+    getSelAndMovePosition(Move, SelRow-SelColumn, FinalRow-FinalColumn),
+    replaceInMatrix(GameState, SelRow, SelColumn, 0, UpdatedGameState),
+    replaceInMatrix(UpdatedGameState, FinalRow, FinalColumn, Player, NewGameState).
 
+/*
+Move when no available moves (and in this case Move is SelectedRow-SelectedColumn),
+replacing selected position on board with empty space,
+returning the board after the remove
+*/
+move(GameState, _, Row-Column, NewGameState):-
+    replaceInMatrix(GameState, Row, Column, 0, NewGameState).
+
+
+
+%replaceInMatrix(+Matrix, +Row, +Column, +Value, -FinalMatrix)
+/*
+Replaces Value in given Row and Column of the Matrix
+*/
+replaceInMatrix(Matrix, Row, Column, Value, FinalMatrix) :-
+	nth0(Row, Matrix, RowsList),
+	replaceInList(Column, RowsList, Value, NewRows),
+	replaceInList(Row, Matrix, NewRows, FinalMatrix).
+
+
+%getSelAndMovePosition(+Move,-SelPosition,-MovPosition)
+/*
+Returns the current and the moving positions
+*/
+getSelAndMovePosition(Move, SelPosition, MovPosition):-
+	nth0(0, Move, SelPosition),
+	nth0(1, Move, MovPosition).
 
 %select_move(+GameState, +Size, +Player, +PlayerType, -Move)
 /*

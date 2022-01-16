@@ -32,7 +32,7 @@ chooseMode :-
     write('|                                                          |\n'),
     write('|                       0. Exit                            |\n'),
     write('|                                                          |\n'),
-    write('|__________________________________________________________|\n').
+    write('|__________________________________________________________|\n'),
 	selectMenuOption(3, ValidOption),
     mainMenuAction(ValidOption).
 
@@ -55,6 +55,32 @@ rulesMode :-
     write('|  and then leaves it or captures all enemy horses.        |\n'),
     write('|                                                          |\n'),
     write('|                      0. Go Back                          |\n'),
-    write('|__________________________________________________________|\n').
+    write('|__________________________________________________________|\n'),
+    selectMenuOption(3, ValidOption),
+    mainMenuAction(ValidOption).
 
+
+endMode :-
+    %write('\33\[2J'),
+    write('\n __________________________________________________________\n'),
+    write('|     _                        ____                      _ |\n'),
+    write('|    | | ___  ___  ___  _ __  | __ )  ___   __ _ _ __ __| ||\n'),
+    write('| _  | |/ _ || __|| _ ||  _  ||  _ || _  || _  | |__/ _   ||\n'),
+    write('|| |_| |  __/|__ | (_) | | | || |_) | (_)||(_| | | | (_|  ||\n'),
+    write('||____/|____||___/|___||_| |_||____/|____||__,_|_| |__,___||\n'),
+    write('|                                                          |\n'),
+    write('|                                                          |\n'),
+    write('|                                                          |\n'),
+    write('|                                                          |\n'),
+    write('|                  Thank you for playing!                  |\n'),
+    write('|                                                          |\n'),
+    write('|                        Filipe Pinto                      |\n'),
+    write('|                        Juan Bellon                       |\n'),
+    write('|                                                          |\n'),
+    write('|                                                          |\n'),
+    write('|                                                          |\n'),
+    write('|__________________________________________________________|\n'),
+    sleep(10),
+    write('\33\[2J'),
+    halt(0).
 %startMode(1) :- !, initial(Board), nl, write('Human vs Human'), asserta(gameMode(1)), nl, write('And game begins!'), nl, nl, nl.

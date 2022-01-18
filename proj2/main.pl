@@ -1,7 +1,7 @@
 :-include('board.pl'). %File that generates the initial board
 
 %Starts the game
-play :- write('Welcome to the Swack game! Lets have some fun'), nl , nl, chooseMode.
+play :- write('Welcome to the JesonBoard game! Lets have some fun'), nl , nl, chooseMode.
 
 %mainMenu/0
 /*
@@ -15,8 +15,27 @@ selectMenuOption(NumOptions, ValidOption) :-
     readMenuOption(OptionInput),
     validateMenuOption(OptionInput, ValidOption, NumOptions), !.
 
+readMenuOption(Option) :-
+    write(' -> '),
+    get_code(Option),
+    Option\=10.
+
+validateMenuOption(OptionInput, ValidOption, NumOptions) :-
+    peek_char('\n'),
+    ValidOption is OptionInput - 48,
+    between(0, NumOptions, ValidOption),
+    skip_line.
+
+%validateMenuOption(+OptionInput,-ValidOption,+NumOptions)
+/*
+If the verification above fails, then it outputs a error message and the user is asked for a new input
+*/
+validateMenuOption(_, _, _) :-
+    write('\nInvalid option! Try again:\n'), skip_line, fail.
+
 chooseMode :-
-    %write('\33\[2J'),
+    repeat,
+    write('\33\[2J'),
     write('\n __________________________________________________________\n'),
     write('|     _                        ____                      _ |\n'),
     write('|    | | ___  ___  ___  _ __  | __ )  ___   __ _ _ __ __| ||\n'),
@@ -33,11 +52,20 @@ chooseMode :-
     write('|                       0. Exit                            |\n'),
     write('|                                                          |\n'),
     write('|__________________________________________________________|\n'),
-	selectMenuOption(3, ValidOption),
+	selectMenuOption(2, ValidOption),
     mainMenuAction(ValidOption).
 
+mainMenuAction(1) :-
+    playMenu.
+
+mainMenuAction(2) :-
+    rulesMenu.
+
+mainMenuAction(0) :-
+    endMode.
+
 rulesMode :-
-    %write('\33\[2J'),
+    write('\33\[2J'),
     write('\n __________________________________________________________\n'),
     write('|     _                        ____                      _ |\n'),
     write('|    | | ___  ___  ___  _ __  | __ )  ___   __ _ _ __ __| ||\n'),
@@ -56,12 +84,12 @@ rulesMode :-
     write('|                                                          |\n'),
     write('|                      0. Go Back                          |\n'),
     write('|__________________________________________________________|\n'),
-    selectMenuOption(3, ValidOption),
-    mainMenuAction(ValidOption).
+    selectMenuOption(0, _),
+    chooseMode.
 
 
 endMode :-
-    %write('\33\[2J'),
+    write('\33\[2J'),
     write('\n __________________________________________________________\n'),
     write('|     _                        ____                      _ |\n'),
     write('|    | | ___  ___  ___  _ __  | __ )  ___   __ _ _ __ __| ||\n'),
@@ -80,7 +108,54 @@ endMode :-
     write('|                                                          |\n'),
     write('|                                                          |\n'),
     write('|__________________________________________________________|\n'),
-    sleep(10),
+    sleep(5),
     write('\33\[2J'),
     halt(0).
+
+playMode :-
+    write('\33\[2J'),
+    write('\n __________________________________________________________\n'),
+    write('|     _                        ____                      _ |\n'),
+    write('|    | | ___  ___  ___  _ __  | __ )  ___   __ _ _ __ __| ||\n'),
+    write('| _  | |/ _ || __|| _ ||  _  ||  _ || _  || _  | |__/ _   ||\n'),
+    write('|| |_| |  __/|__ | (_) | | | || |_) | (_)||(_| | | | (_|  ||\n'),
+    write('||____/|____||___/|___||_| |_||____/|____||__,_|_| |__,___||\n'),
+    write('|                                                          |\n'),
+    write('|                                                          |\n'),
+    write('|                                                          |\n'),
+    write('|                                                          |\n'),
+    write('|                  1. Human vs. Human                      |\n'),
+    write('|                                                          |\n'),
+    write('|                  2. Human vs. Computador                 |\n'),
+    write('|                                                          |\n'),
+    write('|                  0. Return to Main Menu                  |\n'),
+    write('|                                                          |\n'),
+    write('|                                                          |\n'),
+    write('|__________________________________________________________|\n'),
+    selectMenuOption(2, ValidOption),
+    menuAction(ValidOption).
+
+menuAction(1) :-
+    boardSizeMenu(8),
+    write('\n\n\tHave fun!\n\n'),
+    initialize(GameState, Size),
+    play(GameState, Size, 1, 'Player', 'Player'),
+    enterContinue,
+    mainMenu.
+    
+%menuAction(+ValidOption)
+/*
+Displays the board size menu, checks if the input is valid, 
+displays the bot difficulty menu, checks again if the input is valid,
+displays the choose first player menu, checks again if the input is valid
+and acts accordingly to all the choices made by input
+*/
+menuAction(2) :-
+    boardSizeMenu(Size), !,
+    botDificultyMenu(Difficulty),
+    chooseFirstPlayerMenu(First),
+    firstAction(First, Size, Difficulty),
+    enterContinue,
+    mainMenu.
+
 %startMode(1) :- !, initial(Board), nl, write('Human vs Human'), asserta(gameMode(1)), nl, write('And game begins!'), nl, nl, nl.

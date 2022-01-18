@@ -221,8 +221,3 @@ printRow([Head|Tail]) :-
     write(S),
     write(' | '),
     printRow(Tail).
-
-
-initialize(GameState, Size):-
-    generateBoard(GameState, Size),
-    display_game(GameState).

@@ -117,8 +117,8 @@ and if the movement is valid
 movePiece(Board, Size, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn):-
     repeat,
     write('\nMove to:\n'),
-    manageInputs(MoveRow, MoveColumn, Size),
-    verifyOrtMove(Board, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn).
+    manageInputs(MoveRow, MoveColumn, Size).
+    %verifyOrtMove(Board, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn).
 
 %removePiece(+Board,+Size,+Player,-SelectedPosition)
 /*
@@ -131,3 +131,23 @@ removePiece(Board, Size, Player, SelectedRow-SelectedColumn):-
     write('\nRemove piece:\n'),
     manageInputs(SelectedRow, SelectedColumn, Size),
     verifyPlayer(Board, SelectedRow-SelectedColumn, Player).
+
+% %verifyOrtMove(+SelBoard, +Player, +SelectedPosition, +MovePosition)
+% /*
+% check if the player is moving his piece correctly
+% the movements must be "L"
+% when the movement is within the same row, the player can only select the position immediately to the right or left
+% when the movement is within the same column, the player can only select the position immediately to the top or down
+% */
+% verifyOrtMove(SelBoard, Player, SelRow-SelColumn, MoveRow-MoveColumn) :-
+%     isEnemy(SelBoard, MoveRow, MoveColumn, Player),
+%     (
+%         (MoveRow=:=SelRow, (MoveColumn=:=SelColumn+1 ; MoveColumn=:=SelColumn-1));  /*Same row*/
+%         (MoveColumn=:=SelColumn, (MoveRow=:=SelRow+1 ; MoveRow=:=SelRow-1)) /*Same column */
+%     ).
+
+% /*
+% If not, write proper message error and fail predicate
+% */
+% verifyOrtMove(_, _, _, _):-
+%     write('\n! That is not a valid move. Choose again !\n'), fail.

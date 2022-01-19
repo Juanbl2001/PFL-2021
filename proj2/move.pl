@@ -46,7 +46,6 @@ returning the move selected
 */
 select_move(GameState, Size, Player, 'Player', [SelectedPosition, MovePosition]):-
     valid_moves(GameState, Size, Player, _),
-	write('TESTE'),
     selectPiece(GameState, Size, Player, SelectedPosition),
     movePiece(GameState, Size, Player, SelectedPosition, MovePosition).
 
@@ -98,6 +97,8 @@ getPossibleMoves(GameState, Size, Player, Positions, ListOfPossibleMoves):-
 
 getPossibleMoves(_, _, _, [], ListOfPossibleMoves, ListOfPossibleMoves).
 getPossibleMoves(GameState, Size, Player, [Row-Column|PosRest], ListInterm, ListOfPossibleMoves):-
+	% write(Size),nl,
+	% write(Row-Column), nl,
 	checkMove(GameState, Size, Row, Column, Player, Moves),
 	appendMoves(Row-Column, Moves, CurrentMoves),
 	appendNotEmpty(ListInterm, CurrentMoves, NewList),
@@ -285,3 +286,27 @@ checkLastRow(Row, Column, Size) :- Row is Size,
 Checks if List is empty
 */
 isEmpty([]).
+
+validateContent(Board, Size, SelectedRow-SelectedColumn, Player) :- validatePlayer(Board, SelectedRow-SelectedColumn, Player),
+                                                                    validateMove(Board, Size, SelectedRow-SelectedColumn, Player, _).
+
+
+validatePlayer(Board, SelectedRow-SelectedColumn, Player) :- getValue(Board, SelectedRow, SelectedColumn, Player).
+validatePlayer(_, _, _) :- write('\n! That is not your piece. Choose again !\n'), fail.
+
+
+validateMove(Board, Size, SelectedRow-SelectedColumn, Player, ListOfMoves) :- write(Size),nl,
+ 																			  write(SelectedRow-SelectedColumn), nl,
+																			   checkMove(Board, Size, SelectedRow, SelectedColumn, Player, ListOfMoves),
+                                                                               \+isEmpty(ListOfMoves).
+
+validateMove(_, _, _, _, _) :- write('\n! No available moves for this piece. Choose again !\n'), fail.
+
+
+%replaceInList(+Index, +List, +Element, -NewList)
+/*
+Replaces an element in a List at a specified Index with Element
+*/
+replaceInList(Index, List, Element, NewList) :-
+	nth0(Index, List, _, Rest),
+	nth0(Index, NewList, Element, Rest).

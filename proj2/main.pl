@@ -1,5 +1,6 @@
-:-include('board.pl'). %File that generates the initial board
-
+%:-include('board.pl'). %File that generates the initial board
+:-use_module(library(between)).
+:-use_module(library(system)).
 %Starts the game
 play :- write('Welcome to the JesonBoard game! Lets have some fun'), nl , nl, chooseMode.
 
@@ -56,10 +57,10 @@ chooseMode :-
     mainMenuAction(ValidOption).
 
 mainMenuAction(1) :-
-    playMenu.
+    playMode.
 
 mainMenuAction(2) :-
-    rulesMenu.
+    rulesMode.
 
 mainMenuAction(0) :-
     endMode.
@@ -110,7 +111,7 @@ endMode :-
     write('|__________________________________________________________|\n'),
     sleep(5),
     write('\33\[2J'),
-    halt(0).
+    halt(10).
 
 playMode :-
     write('\33\[2J'),

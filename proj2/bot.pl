@@ -115,3 +115,14 @@ getValuesInAllRows([Row|RestRows], Size, RowIndex, ListOfRowsValues):-
     NextRowIndex is RowIndex+1,
     getValuesInAllRows(RestRows, Size, NextRowIndex, TempRowsValues),
     append(TempRowsValues, [Amount], ListOfRowsValues).
+
+select_move(GameState, Size, Player, 'Bot', [SelectedPosition, MovePosition]):-
+    valid_moves(GameState, Size, Player, _),
+    selectPiece(GameState, Size, Player, SelectedPosition),
+    movePiece(GameState, Size, Player, SelectedPosition, MovePosition).
+
+/*
+If no available moves then select a piece to remove, returning the move selected
+*/
+select_move(GameState, Size, Player, 'Bot', SelectedPosition):-
+    removePiece(GameState, Size, Player, SelectedPosition).

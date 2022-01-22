@@ -46,3 +46,29 @@ play(GameState, Size, Player, PlayerType, EnemyType):-
 
 first_play(1, Size, Difficulty) :- initialize(GameState, Size),
                                    play(GameState, Size, 1, 'Player', 'Easy').
+
+%game_over(+GameState, +Size, +Player, -Winner)
+/*
+Check victory from the current player first (last round enemy)
+/
+game_over(GameState, Size, Player, Player):-
+    checkWinner(Player, GameState, Size, 0, 0).
+
+/
+Check victory from the current enemy after
+*/
+game_over(GameState, Size, Player, Enemy):-
+    Enemy is -Player,
+    checkWinner(Enemy, GameState, Size, 0, 0).
+
+
+checkWinner(GameState, Size, Player):-
+    getValue(GameState, Size/2, Size/2, Center),
+    Center is Player,
+    getPossibleMoves(GameState, Size, Player, [Size/2-Size/2], ListOfPositions),
+    +isEmpty(ListOfPositions).
+
+checkWinner(GameState, Size, Player):-
+    getPlayerPieces(GameState, Size, Player, ListOfPositions),
+    isEmpty(ListOfPositions),
+    Player is -Player.

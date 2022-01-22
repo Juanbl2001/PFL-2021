@@ -1,7 +1,7 @@
 :- include('input.pl').
-:- include('board.pl').
+:- include('main.pl').
 :- include('move.pl').
-
+:- include('bot.pl').
 
 %initial_state(-GameState, +Size)
 /*
@@ -38,7 +38,7 @@ play(GameState, Size, Player, PlayerType, EnemyType):-
     select_move(GameState, Size, Player, PlayerType, Move),
     move(GameState, Player, Move, NewGameState),
     display_game(NewGameState),
-    Enemy is Player + 1,
+    Enemy is -Player,
     write(Enemy), nl,
     write(EnemyType), nl,
     !, play(NewGameState, Size, Enemy, EnemyType, PlayerType).

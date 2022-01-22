@@ -226,7 +226,7 @@ Checks if board value in the given position (row and column) is the current play
 */
 isEnemy(Board, Row, Column, Player) :-
     getValue(Board, Row, Column, Enemy),
-    Enemy is Player + 1.
+    Enemy is -Player.
 
 
 getValue(GameState, Row, Column, Value) :- 	

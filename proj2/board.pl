@@ -63,7 +63,7 @@ buildBoard(InitialBoard, FinalBoard, Size, RowIndex, Cell):-
 
 buildBoard(InitialBoard, FinalBoard, Size, RowIndex, Cell):-
     RowIndex =:= 8,
-    buildRow([], BuiltRow, Size, 0, 2),
+    buildRow([], BuiltRow, Size, 0, -1),
     append(InitialBoard, BuiltRow, UpdatedBoard),
     NewRowIndex is RowIndex+1,
     buildBoard(UpdatedBoard, FinalBoard, Size, NewRowIndex, 0).
@@ -105,7 +105,7 @@ buildMiddleRow(Row, BuiltRow, Size, ColIndex, Cell):-
 
 %character(+Character,-Representation)
 character(0,' '). %character for an empty space representing a piece removed
-character(2,'X'). %character representing the blue player piece
+character(-1,'X'). %character representing the blue player piece
 character(1,'O'). %character representing the red player piece
 character(3,'?'). %auxiliar character for floodfill, filling empty spaces
 

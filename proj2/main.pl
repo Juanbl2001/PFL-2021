@@ -1,4 +1,4 @@
-%:-include('board.pl'). %File that generates the initial board
+:-include('board.pl'). %File that generates the initial board
 :-use_module(library(between)).
 :-use_module(library(system)).
 %Starts the game
@@ -131,13 +131,12 @@ playMode :-
     write('|                                                          |\n'),
     write('|                  0. Return to Main Menu                  |\n'),
     write('|                                                          |\n'),
-    write('|                                                          |\n'),
     write('|__________________________________________________________|\n'),
     selectMenuOption(2, ValidOption),
     menuAction(ValidOption).
 
 menuAction(1) :-
-    boardSizeMenu(8),
+    %boardSizeMenu(8),
     write('\n\n\tHave fun!\n\n'),
     initialize(GameState, Size),
     play(GameState, Size, 1, 'Player', 'Player'),

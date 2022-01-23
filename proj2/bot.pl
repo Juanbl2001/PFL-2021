@@ -1,8 +1,8 @@
 %choose_move(GameState, Size, Player, Move)*/
 /*
-    Selects a piece and a position to move (bot) if there are available moves for the player,
-    returning the move selected
-    Also prints the selected move
+Seleciona uma peça e uma posição para mover (bot) se houver movimentos 
+disponíveis para o jogador,retornando o movimento selecionado. 
+Também imprime o movimento selecionado
 */
 choose_move(GameState, Size, Player, Level, Move):-
     valid_moves(GameState, Size, Player, ListOfPossibleMoves),
@@ -16,8 +16,8 @@ choose_move(GameState, Size, Player, Level, Move):-
 
 %movePiecePositionBot(+GameState, +Size, +Player, +Level, +ListOfPossibleMoves, -SelectedMove)
 /*
-    Select a random Move from the ListOfPossibleMoves, 
-    returning the move selected
+    Selecione um movimento aleatório do ListOfPossibleMoves, 
+    retornando o movimento selecionado
 */
 movePiecePositionBot(_, _, _, 'Easy', ListOfPossibleMoves, SelectedMove):-
     random_member(SelectedMove, ListOfPossibleMoves).
@@ -31,7 +31,7 @@ printPosition(Row-Column):-
 
 %printPositionList(+Position)
 /*
-    Prints a list of several Positions (represented as [Position1, Position2, ...])
+    Imprime uma lista de várias posições (representadas como [Position1, Position2, ...])
 */
 printPositionsList([]).
 printPositionsList([H|T]):-
@@ -40,7 +40,7 @@ printPositionsList([H|T]):-
 
 %get_number(+Column, -Number)
 /*
-    Gets Number corresponding to the given Column index
+    Obtém o número correspondente ao índice de coluna fornecido
 */
 get_number(Column, Number) :-
 	NewColumn is Column + 49,

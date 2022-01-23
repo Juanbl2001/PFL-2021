@@ -1,59 +1,17 @@
-% board([[1,1,1,1,1,1,1,1],
-%       [0,0,0,0,0,0,0,0],
-%       [0,0,0,0,0,0,0,0],
-%       [0,0,0,0,0,0,0,0],
-%       [0,0,0,0,3,0,0,0],  %initial state
-%       [0,0,0,0,0,0,0,0],
-%       [0,0,0,0,0,0,0,0],
-%       [0,0,0,0,0,0,0,0],
-%       [2,2,2,2,2,2,2,2]]).
-
-/*1 representa as peças do jogador 1
-  2 representa as peças do jogador 2
-  3 representa o centro do tabuleiro*/
-
-  /*[ [1,0,1,1,1,1,1,1],
-      [0,0,0,0,0,0,0,0],
-      [0,0,1,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,3,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,2,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [2,0,2,2,2,2,2,2]]*/
-
-  /*[ [1,0,1,1,1,1,1,1],
-      [0,0,0,0,0,0,0,0],
-      [0,0,1,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,2,3,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [2,0,2,2,2,2,2,2]]*/
-
-  /*[ [1,0,1,1,1,1,1,1],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,1,3,0,0,0],   %o jogador 1 capturou uma peça do jogador 2
-      [0,0,0,0,0,0,0,0],   %intermediate state
-      [0,0,0,0,0,0,0,0],
-      [0,0,0,0,0,0,0,0],
-      [2,0,2,2,2,2,2,2]]*/
-
 %generateBoard(+GameState,+Size)
 /*
-Generates a  GameState with given Size
+Gera um GameState com tamanho determinado
 */
 generateBoard(GameState, Size):-
     buildBoard([], GameState, Size, 0, 1).
 
 %buildBoard(+InitialBoard,-FinalBoard,+Size,+RowIndex,+Cell)
 /*
-Creates a board row by row with given Size
+Cria um quadro linha por linha com o tamanho fornecido (vai ser sempre 9)
 */
 buildBoard(FinalBoard, FinalBoard, Size, Size, _).
+
+%Se for a linha zero vai ser os valores do player 1
 buildBoard(InitialBoard, FinalBoard, Size, RowIndex, _):-
     RowIndex =:= 0,
     buildRow([], BuiltRow, Size, 0, 1),
@@ -61,6 +19,7 @@ buildBoard(InitialBoard, FinalBoard, Size, RowIndex, _):-
     NewRowIndex is RowIndex+1,
     buildBoard(UpdatedBoard, FinalBoard, Size, NewRowIndex, 0).
 
+%Se for a linha 8 (a última) vai ser os valores do player 1
 buildBoard(InitialBoard, FinalBoard, Size, RowIndex, _):-
     RowIndex =:= 8,
     buildRow([], BuiltRow, Size, 0, -1),
@@ -68,13 +27,16 @@ buildBoard(InitialBoard, FinalBoard, Size, RowIndex, _):-
     NewRowIndex is RowIndex+1,
     buildBoard(UpdatedBoard, FinalBoard, Size, NewRowIndex, 0).
 
+
+%Se não for nenhuma das outras linhas/posições, insere o valor zero
 buildBoard(InitialBoard, FinalBoard, Size, RowIndex, _):-
     RowIndex =\= 8, RowIndex =\= 0, RowIndex =\= 4, RowIndex < 10,
     buildRow([], BuiltRow, Size, 0, 0),
     append(InitialBoard, BuiltRow, UpdatedBoard),
     NewRowIndex is RowIndex+1,
-    buildBoard(UpdatedBoard, FinalBoard, Size, NewRowIndex, 0).
+    buildBoard(UpdatedBoard, FinalBoard, Size, NewRowIndex, 0).~
 
+%Se na posição do centro insere o valor associado
 buildBoard(InitialBoard, FinalBoard, Size, RowIndex, _):-
     RowIndex =:= 4,
     buildMiddleRow([], BuiltRow, Size, 0, 0),
@@ -82,7 +44,7 @@ buildBoard(InitialBoard, FinalBoard, Size, RowIndex, _):-
     NewRowIndex is RowIndex+1,
     buildBoard(UpdatedBoard, FinalBoard, Size, NewRowIndex, 0).
 /*
-Creates a board's row based on board Size and row initial Cell
+Cria a linha de um quadro com base no tamanho do quadro e na célula inicial da linha
 */
 buildRow(Row, BuiltRow, Size, Size, _):- BuiltRow=[Row].
 buildRow(Row, BuiltRow, Size, ColIndex, Cell):-
@@ -112,7 +74,7 @@ character(3,'?'). %auxiliar character for middle
 
 %get_letter(+Row, -Letter)
 /*
-Gets Letter corresponding to the given Row index
+Obtém a letra correspondente ao índice de linha fornecido
 */
 get_letter(Row, Letter) :-
 	NewRow is Row + 65,
@@ -120,7 +82,7 @@ get_letter(Row, Letter) :-
 
 %display_game(+Board)
 /*
-Prints the board header, matrix and bottom
+Imprime o cabeçalho, a matriz e o fundo do quadro
 */
 display_game(Board) :-
     length(Board, Size),
@@ -131,13 +93,13 @@ display_game(Board) :-
 
 %printBoardHeader(+Size)
 /*
-Prints the columns indicator,
-a line of X's on the top of the board representing the top side of the blue player,
-and the separators
+Imprime o indicador de colunas,
+uma linha de Xs no topo do tabuleiro representando 
+o lado superior do jogador 2 e os separadores
 */
 printBoardHeader(Size) :-
     write('       '),
-    printHeaderNumbers(1, Size), /* Columns indicator */
+    printHeaderNumbers(1, Size), /* Indicador de coluna */
     write('       '),
     printSeparator(1, Size),
     write('       '),
@@ -146,7 +108,7 @@ printBoardHeader(Size) :-
 
 %printHeaderNumbers(+Current,+Size)
 /*
-Print the columns indicators with the separated by | and spaces
+Imprima os indicadores de colunas com os separados por | e espaços
 */
 printHeaderNumbers(Current, Size) :- Current=:=Size+1, write('|\n').
 printHeaderNumbers(Current, Size) :-
@@ -155,7 +117,7 @@ printHeaderNumbers(Current, Size) :-
 
 %printSeparator(+Current,+Size)
 /*
-Prints the separator
+Imprime o separador
 */
 printSeparator(Current, Size) :- Current=:=Size+1, write('+\n').
 printSeparator(Current, Size) :-
@@ -164,7 +126,7 @@ printSeparator(Current, Size) :-
 
 %printXLine(+Current,+Size)
 /*
-Prints a line of X's  representing one side of the blue player
+Imprime uma linha de Xs representando um lado do jogador azul
 */
 printXLine(Current, Size) :- Current=:=Size+1, write(' \n').
 printXLine(Current, Size) :-
@@ -173,7 +135,7 @@ printXLine(Current, Size) :-
 
 %printBoardRowSeparator(+Size)
 /*
-Prints the separators
+Imprime o separador
 */
 printBoardRowSeparator(Size) :-
     write('---+   '),
@@ -181,7 +143,7 @@ printBoardRowSeparator(Size) :-
 
 %printBoardBottom(+Size)
 /*
-Prints a line of X's on the bottom of the board representing the bottom side of the blue player 
+Imprime uma linha de X na parte inferior do tabuleiro representando a parte inferior do jogador azul
 */
 printBoardBottom(Size) :-
     write('       '),
@@ -189,9 +151,9 @@ printBoardBottom(Size) :-
 
 %printMatrix(+Board,+N,+Size)
 /*
-Prints the matrix representing the board with the row indicators,
-a line of O's on the left side of the board representing the left side of the red player,
-and the separators
+Imprime a matriz que representa o quadro com os indicadores de linha,
+uma linha de O's no lado esquerdo do tabuleiro representando o lado esquerdo do jogador 1,
+e os separadores
 */
 printMatrix([], _, _).
 printMatrix([Head|Tail], N, Size):-
@@ -207,14 +169,14 @@ printMatrix([Head|Tail], N, Size):-
 
 %printRow(+List)
 /*
-Prints a line of O's on the right side of the board representing the right side of the red player
+Imprime uma linha de O's no lado direito do tabuleiro representando o lado direito do jogador 2
 */
 printRow([]):-
     write(' '). 
 
 %printRow(+List)
 /*
-Prints a list representing a matrix row
+Imprime uma lista representando uma linha da matriz
 */
 printRow([Head|Tail]) :-
     character(Head, S),

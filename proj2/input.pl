@@ -1,6 +1,6 @@
 %readRow(+Row)
 /*
-Reads Row input code, ignoring newlines (ascii code 10)
+Lê o código de entrada da linha, ignorando novas linhas (código ASCII 10)
 */
 readRow(Row) :-
     write('  -> Row    '),
@@ -9,7 +9,7 @@ readRow(Row) :-
 
 %readColumn(+Column)
 /*
-Reads Column input code, ignoring newlines (ascii code 10)
+Lê o código de entrada da coluna, ignorando novas linhas (código ASCII 10)
 */
 readColumn(Column) :-
     write('  -> Column '),
@@ -18,10 +18,10 @@ readColumn(Column) :-
 
 %validateRow(+RowInput,-NewRow,+Size)
 /*
-Checks if the row input is valid by calculating it's index, converting ascii code to number, being the first row A with index 0
-ascii code for A is 65; ascii code for a is 97
-the index has to be within the limits of the board
-the next char has to be a newline (else 2 chars in input, thus failing)
+Verifica se a entrada da linha é válida calculando seu índice, convertendo código ascii em número,
+sendo a primeira linha A com índice 0 o código ascii para A é 65; código ascii para a é 
+97 o índice tem que estar dentro dos limites da placa o próximo caractere tem que ser uma 
+nova linha (senão 2 caracteres na entrada, falhando assim)
 */
 validateRow(RowInput, NewRow, Size) :-
     peek_char('\n'),
@@ -41,16 +41,16 @@ validateRow(RowInput, NewRow, Size) :-
 
 %validateRow(+RowInput,-NewRow,+Size)
 /*
-If the verification above fails, then it outputs a error message and the user is asked for a new input
+Se a verificação acima falhar, ela exibirá uma mensagem de erro e o usuário será solicitado a inserir uma nova entrada
 */
 validateRow(_, _, _) :-
     write('\n! That row is not valid. Choose again !\n\n'), skip_line, fail.
 
 %validateColumn(+ColumnInput,-NewColumn,+Size)
 /*
-Checks if the column input is valid by calculating it's index, converting ascii code to number, being the first collumn 1 index 0
-the index has to be within the limits of the board
-the next char has to be a newline (else 2 chars in input, thus failing)
+Verifica se a entrada da coluna é válida calculando o seu índice, convertendo o código ascii em número, 
+sendo a primeira coluna 1 índice 0 o índice tem que estar dentro dos limites da placa o próximo caractere 
+tem que ser uma nova linha (senão 2 caracteres na entrada , falhando assim)
 */
 validateColumn(ColumnInput, NewColumn, Size) :-
     peek_char('\n'),
@@ -61,14 +61,14 @@ validateColumn(ColumnInput, NewColumn, Size) :-
 
 %validateColumn(+ColumnInput,-NewColumn,+Size)
 /*
-If the verification above fails, then it outputs a error message and the user is asked for a new input
+Se a verificação acima falhar, ela exibirá uma mensagem de erro e o usuário será solicitado a inserir uma nova entrada
 */
 validateColumn(_, _, _) :-
     write('\n! That column is not valid. Choose again !\n\n'), skip_line, fail.
 
 %manageRow(-NewRow, +Size)
 /*
-Reads the input Row and checks if it is between the limits of the board
+Lê a linha de entrada e verifica se está entre os limites da placa
 */
 manageRow(NewRow, Size) :-
     repeat,
@@ -77,7 +77,7 @@ manageRow(NewRow, Size) :-
 
 %manageColumn(-NewColumn,+Size)
 /*
-Reads the input Column and checks if it is between the limits of the board
+Lê a coluna de entrada e verifica se está entre os limites da placa
 */
 manageColumn(NewColumn, Size) :-
     repeat,
@@ -86,7 +86,7 @@ manageColumn(NewColumn, Size) :-
 
 %manageInputs(-NewRow,-NewColumn,+Size)
 /*
-Reads and checks both row and column inputs
+Lê e verifica as entradas de linha e coluna
 */
 manageInputs(NewRow, NewColumn, Size) :-
     manageRow(NewRow, Size),
@@ -94,10 +94,9 @@ manageInputs(NewRow, NewColumn, Size) :-
 
 %selectPiece(+Board,+Size,+Player,-SelectedPosition)
 /*
-The player selects the piece he wants to move
-the inputs are checked if they are within the boundaries of the board,
-if the player is selecting his own piece,
-and if there are any move possible for that piece
+O jogador seleciona a peça que deseja mover as entradas são verificadas
+se estão dentro dos limites do tabuleiro, se o jogador está selecionando
+sua própria peça e se há algum movimento possível para essa peça
 */
 selectPiece(Board, Size, Player, SelectedRow-SelectedColumn):-
     repeat,
@@ -107,9 +106,8 @@ selectPiece(Board, Size, Player, SelectedRow-SelectedColumn):-
 
 %movePiece(+Board,+Size,+Player,+SelectedPosition,-MovePosition)
 /*
-The player selects the position for the piece he wants to move
-the inputs are checked if they are within the boundaries of the board,
-and if the movement is valid
+O jogador seleciona a posição para a peça que deseja mover as entradas 
+são verificadas se estão dentro dos limites do tabuleiro e se o movimento é válido
 */
 movePiece(Board, Size, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn):-
     repeat,
@@ -119,14 +117,14 @@ movePiece(Board, Size, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn):-
 
 %printWinner(+Player)
 /*
-Prints a formated red player win message
+Imprime uma mensagem formatada para a vitória do jogador 1
 */
 printWinner(1):-
 	write('\n!!! Player1 (O) won !!!\n\n').
 
 %printWinner(+Player)
 /*
-Prints a formated blue player win message
+Imprime uma mensagem formatada para a vitória do jogador 2
 */
 printWinner(-1):-
 	write('\n!!! Player2 (X) won !!!\n\n').

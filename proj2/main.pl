@@ -158,7 +158,7 @@ menuAction(3) :-
     enterContinue,
     chooseMode.
 menuAction(0):-
-    mainMenu.
+    chooseMode.
 
 enterContinue:-
 	write('\nPress ENTER to continue.'),

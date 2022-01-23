@@ -140,6 +140,7 @@ playMode :-
     selectMenuOption(3, ValidOption),
     menuAction(ValidOption).
 
+
 menuAction(1) :-
     write('\n\n\tHave fun!\n\n'),
     initialize(GameState, 9),
@@ -148,11 +149,7 @@ menuAction(1) :-
     chooseMode.
 
 menuAction(2) :-
-    write('\n\n\tHave fun!\n\n'),
-    initialize(GameState, 9),
-    play(GameState, 9, 1, 'Player', 'Easy'),
-    enterContinue,
-    chooseMode.
+    firstMoveMode.
 
 menuAction(3) :-
     write('\n\n\tHave fun!\n\n'),
@@ -163,6 +160,46 @@ menuAction(3) :-
 
 menuAction(0):-
     chooseMode.
+
+firstMoveMode :-
+    write('\33\[2J'),
+    write('\n __________________________________________________________\n'),
+    write('|        _                                                 |\n'),
+    write('|       | | ___  ___  ___  _ __   _ __ ____  _____  ____   |\n'),
+    write('|    _  | |/ _ || __|| _ ||  _  ||  _   _  ||  _  ||  __|  |\n'),
+    write('|   | |_| |  __/|__ | (_) | | | || | | | | || (_) || |     |\n'),
+    write('|   |____/|____||___/|___||_| |_||_| |_| |_||_____||_|     |\n'),
+    write('|                                                          |\n'),
+    write('|                                                          |\n'),
+    write('|                     Who goes First?                      |\n'),
+    write('|                                                          |\n'),
+    write('|                    1. Human (O)                          |\n'),
+    write('|                                                          |\n'),
+    write('|                    2. Bot (X)                            |\n'),
+    write('|                                                          |\n'),
+    write('|                    0. Return Back                        |\n'),
+    write('|                                                          |\n'),
+    write('|__________________________________________________________|\n'),
+    selectMenuOption(2, ValidOption),
+    menuFirstMove(ValidOption).
+
+menuFirstMove(0):-
+    playMode.
+
+menuFirstMove(1):-
+    write('\n\n\tHave fun!\n\n'),
+    initialize(GameState, 9),
+    play(GameState, 9, 1, 'Player', 'Easy'),
+    enterContinue,
+    chooseMode.
+
+menuFirstMove(2):-
+    write('\n\n\tHave fun!\n\n'),
+    initialize(GameState, 9),
+    play(GameState, 9, 1, 'Easy', 'Player'),
+    enterContinue,
+    chooseMode.
+
 
 enterContinue:-
 	write('\nPress ENTER to continue.'),

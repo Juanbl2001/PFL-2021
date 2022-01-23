@@ -2,7 +2,7 @@
 /*
 Retorna o GameState inicial com o tamanho fornecido
 */
-initial_state(GameState, Size) :- generateBoard(GameState, Size).
+initial_state(GameState, Size) :- generate_board(GameState, Size).
 
 
 %initialize(-GameState, +Size)

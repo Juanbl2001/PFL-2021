@@ -104,10 +104,10 @@ buildMiddleRow(Row, BuiltRow, Size, ColIndex, Cell):-
     buildMiddleRow(UpdatedRow, BuiltRow, Size, NewColIndex, Cell).
 
 %character(+Character,-Representation)
-character(0,' '). %character for an empty space representing a piece removed
-character(-1,'X'). %character representing the blue player piece
-character(1,'O'). %character representing the red player piece
-character(3,'?'). %auxiliar character for floodfill, filling empty spaces
+character(0,' '). %character for an empty space
+character(-1,'X'). %character representing the player1 piece
+character(1,'O'). %character representing the player2 piece
+character(3,'?'). %auxiliar character for middle
 
 
 %get_letter(+Row, -Letter)

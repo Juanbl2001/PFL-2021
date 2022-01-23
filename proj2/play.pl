@@ -33,6 +33,20 @@ if the current player is a bot, the program sleeps for 1 second,
 player chooses a move according to its type, makes the move and prints the board afterwards,
 and call the play predicate to make the enemy play
 */
+
+play(GameState, Size, Player, _, _):-
+    game_over(GameState, Size, Player ,Winner),
+    write(Winner), !, printWinner(Winner).
+
+
+% play(GameState, Size, Player, PlayerType, _):-
+%     %printTurn(Player),
+%     select_move(GameState, Size, Player, PlayerType, Move),
+%     move(GameState, Player, Move, NewGameState),
+%     display_game(NewGameState),
+%     game_over(GameState, Size, Player, Move, Winner), !, printWinner(Winner),
+%     write('MERDA').
+
 play(GameState, Size, Player, PlayerType, EnemyType):-
     %printTurn(Player),
     select_move(GameState, Size, Player, PlayerType, Move),
@@ -45,28 +59,30 @@ play(GameState, Size, Player, PlayerType, EnemyType):-
 first_play(1, Size, Difficulty) :- initialize(GameState, Size),
                                    play(GameState, Size, 1, 'Player', 'Easy').
 
-%game_over(+GameState, +Size, +Player, -Winner)
-/*
-Check victory from the current player first (last round enemy)
-/
-game_over(GameState, Size, Player, Player):-
-    checkWinner(Player, GameState, Size, 0, 0).
-
-/
-Check victory from the current enemy after
-*/
-game_over(GameState, Size, Player, Enemy):-
-    Enemy is -Player,
-    checkWinner(Enemy, GameState, Size, 0, 0).
 
 
-checkWinner(GameState, Size, Player):-
-    getValue(GameState, Size/2, Size/2, Center),
-    Center is Player,
-    getPossibleMoves(GameState, Size, Player, [Size/2-Size/2], ListOfPositions),
-    +isEmpty(ListOfPositions).
+game_over(GameState, Size, Player, Winner) :-
+    checkWinner(GameState, Size, Player, Winner).
 
-checkWinner(GameState, Size, Player):-
+
+checkWinner(GameState, Size, Player, Winner) :-
     getPlayerPieces(GameState, Size, Player, ListOfPositions),
     isEmpty(ListOfPositions),
-    Player is -Player.
+    Winner is -Player.
+
+% game_over(GameState, Size, Player, Move, Player):-
+%     checkWinner(GameState, Size, Move, Player).
+
+% game_over(GameState, Size, Player, Move, Enemy):-
+%     Enemy is -Player,
+%     checkWinner(GameState, Size, Move, Player).
+
+
+% checkWinner(GameState, Size, Move, Player):-
+%     getSelAndMovePosition(Move, SelRow-SelColumn, FinalRow-FinalColumn),
+%     SelRow is Size/2,
+%     SelColumn is Size/2.
+
+% checkWinner(GameState, Size, Move, Player):-
+%     getPlayerPieces(GameState, Size, Player, ListOfPositions),
+%     isEmpty(ListOfPositions).

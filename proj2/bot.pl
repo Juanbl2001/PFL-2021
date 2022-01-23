@@ -9,7 +9,9 @@ Also prints the selected move
 select_move(GameState, Size, Player, Level, Move):-
     valid_moves(GameState, Size, Player, ListOfPossibleMoves),
     sleep(1),
+    write(ListOfPossibleMoves),
     movePiecePositionBot(GameState, Size, Player, Level, ListOfPossibleMoves, Move),
+    member(Move, ListOfPossibleMoves),
     getSelAndMovePosition(Move, SelPosition, MovPosition),
     write('\nSelected: '), printPosition(SelPosition), nl,
     write('\nMoved to: '), printPosition(MovPosition), nl.
@@ -18,11 +20,11 @@ select_move(GameState, Size, Player, Level, Move):-
 If no available moves then select a piece to remove (bot), returning the move selected
 Also prints the selected move
 */
-select_move(GameState, Size, Player, Level, Move):-
-    getPlayerInMatrix(GameState, Size, Player, ListOfPositions),
-    sleep(1),
-    removePiecePositionBot(GameState, Size, Player, Level, ListOfPositions, Move),
-    write('\nRemoved: '), printPosition(Move), nl.
+% select_move(GameState, Size, Player, Level, Move):-
+%     getPlayerInMatrix(GameState, Size, Player, ListOfPositions),
+%     sleep(1),
+%     removePiecePositionBot(GameState, Size, Player, Level, ListOfPositions, Move),
+%     write('\nRemoved: '), printPosition(Move), nl.
 
 
 %movePiecePositionBot(+GameState, +Size, +Player, +Level, +ListOfPossibleMoves, -SelectedMove)

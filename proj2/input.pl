@@ -132,22 +132,16 @@ removePiece(Board, Size, Player, SelectedRow-SelectedColumn):-
     manageInputs(SelectedRow, SelectedColumn, Size),
     verifyPlayer(Board, SelectedRow-SelectedColumn, Player).
 
-% %verifyOrtMove(+SelBoard, +Player, +SelectedPosition, +MovePosition)
-% /*
-% check if the player is moving his piece correctly
-% the movements must be "L"
-% when the movement is within the same row, the player can only select the position immediately to the right or left
-% when the movement is within the same column, the player can only select the position immediately to the top or down
-% */
-% verifyOrtMove(SelBoard, Player, SelRow-SelColumn, MoveRow-MoveColumn) :-
-%     isEnemy(SelBoard, MoveRow, MoveColumn, Player),
-%     (
-%         (MoveRow=:=SelRow, (MoveColumn=:=SelColumn+1 ; MoveColumn=:=SelColumn-1));  /*Same row*/
-%         (MoveColumn=:=SelColumn, (MoveRow=:=SelRow+1 ; MoveRow=:=SelRow-1)) /*Same column */
-%     ).
+%printWinner(+Player)
+/*
+Prints a formated red player win message
+*/
+printWinner(1):-
+	write('\n!!! Player1 (O) won !!!\n\n').
 
-% /*
-% If not, write proper message error and fail predicate
-% */
-% verifyOrtMove(_, _, _, _):-
-%     write('\n! That is not a valid move. Choose again !\n'), fail.
+%printWinner(+Player)
+/*
+Prints a formated blue player win message
+*/
+printWinner(-1):-
+	write('\n!!! Player2 (X) won !!!\n\n').

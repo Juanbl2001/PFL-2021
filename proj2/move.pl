@@ -209,7 +209,7 @@ checkRightDownMove(GameState, Size, Row, Col, Player, RightDownMove):-
 	NewCol is Col+2,
 	NewRow is Row + 1,
 	checkRowCol(Size, NewRow, NewCol),
-    isPlayer(GameState, NewRow, NewCol, Player),
+    \+isPlayer(GameState, NewRow, NewCol, Player),
     RightDownMove = [NewRow-NewCol].
 
 checkRightDownMove(_, _, _, _, _, []).

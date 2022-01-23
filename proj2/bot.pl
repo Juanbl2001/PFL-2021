@@ -22,15 +22,6 @@ choose_move(GameState, Size, Player, Level, Move):-
 movePiecePositionBot(_, _, _, 'Easy', ListOfPossibleMoves, SelectedMove):-
     random_member(SelectedMove, ListOfPossibleMoves).
 
-removePiecePositionBot(_, _, _, 'Easy', ListOfPositions, SelPosition):-
-    random_member(SelPosition, ListOfPositions).
-
-
-%removePiecePositionBot(+GameState, +Size, +Player, +Level, +ListOfPositions, -Move)
-/*
-    Select a random position of the current player positions to remove the piece
-    returning the position selected
-*/
 
 printPosition([]).
 printPosition(Row-Column):-

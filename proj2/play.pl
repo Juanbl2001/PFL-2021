@@ -21,24 +21,24 @@ player chooses a move according to its type, makes the move and prints the board
 and call the play predicate to make the enemy play
 */
 
-play(GameState, Size, Player, _, _):-
-    game_over(GameState, Size, Player ,Winner).
+play(GameState, Size, Player, _):-
+    game_over(GameState, Size, Player ,_).
 
 
 play(GameState, Size, Player, PlayerType, EnemyType):-
     choose_move(GameState, Size, Player, PlayerType, Move),
     move(GameState, Player, Move, NewGameState),
     display_game(NewGameState),
-    game_over(NewGameState, Size, Player, PlayerType, EnemyType, Move, Winner).
+    game_over(NewGameState, Size, Player, PlayerType, EnemyType, Move).
 
-game_over(GameState, Size, Player, Winner) :-
+game_over(GameState, Size, Player) :-
     checkWinner(GameState, Size, Player, Winner), !, printWinner(Winner).
 
-game_over(GameState, Size, Player, _, _, Move, Winner) :-
+game_over(GameState, Size, Player, _, _, Move) :-
     checkWinner(GameState, Size, Player, Move, Winner), !, printWinner(Winner).
 
 
-game_over(GameState, Size, Player, PlayerType, EnemyType, _, _) :- 
+game_over(GameState, Size, Player, PlayerType, EnemyType, _) :- 
     Enemy is -Player,
     !, play(GameState,  Size, Enemy, EnemyType, PlayerType).
 

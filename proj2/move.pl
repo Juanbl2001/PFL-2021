@@ -166,7 +166,7 @@ checkLeftUpMove(GameState, Size, Row, Col, Player, LeftUpMove):-
     Col>0,
 	NewCol is Col - 2,
 	NewRow is Row - 1,
-	checkRowCol(Size, NewRow, NewRow),
+	checkRowCol(Size, NewRow, NewCol),
     \+isPlayer(GameState, NewRow, NewCol, Player),
     LeftUpMove = [NewRow-NewCol].
 
@@ -203,23 +203,14 @@ checkRightDownMove(GameState, Size, Row, Col, Player, RightDownMove):-
 checkRightDownMove(_, _, _, _, _, []).
 
 
-checkRowCol(Size, Row, Col) :- Row > 0, Row < Size,
-							   Col > 0, Col < Size.
+checkRowCol(Size, Row, Col) :- Row >= 0, Row < Size,
+							   Col >= 0, Col < Size.
 					 		
 
 
 isPlayer(Board, Row, Column, Player) :-
 	getValue(Board, Row, Column, Value),
 	Value is Player.
-
-%isEnemy(+Board,+Row,+Column,+Player)
-/*
-Checks if board value in the given position (row and column) is the current player's enemy
-*/
-isEnemy(Board, Row, Column, Player) :-
-    getValue(Board, Row, Column, Enemy),
-    Enemy is -Player.
-
 
 getValue(Matrix, Row, Column, Value) :- 	
 	nth0(Row, Matrix, RowList),

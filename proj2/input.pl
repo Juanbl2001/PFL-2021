@@ -1,6 +1,3 @@
-:-use_module(library(between)).
-
-
 %readRow(+Row)
 /*
 Reads Row input code, ignoring newlines (ascii code 10)

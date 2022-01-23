@@ -1,5 +1,3 @@
-:- use_module(library(random)).
-
 %choose_move(GameState, Size, Player, Move)*/
 /*
     Selects a piece and a position to move (bot) if there are available moves for the player,

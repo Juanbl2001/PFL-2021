@@ -1,5 +1,3 @@
-:- use_module(library(lists)).
-
 %move(+GameState, +Player, +Move, -NewGameState)
 /*
 Move when available moves (and in this case Move is [SelectedRow-SelectedColumn, MoveRow-MoveColumn]),
@@ -145,7 +143,7 @@ checkUpRightMove(GameState, Size, Row, Col, Player, UpRightMove):-
 checkUpRightMove(_, _, _, _, _, []).
 
 checkDownLeftMove(GameState, Size, Row, Col, Player, DownLeftMove):-
-    Row<Size,
+    Row<Size, 
 	NewRow is Row + 2,
 	NewCol is Col - 1,
 	checkRowCol(Size, NewRow, NewCol),
@@ -205,8 +203,8 @@ checkRightDownMove(GameState, Size, Row, Col, Player, RightDownMove):-
 checkRightDownMove(_, _, _, _, _, []).
 
 
-checkRowCol(Size, Row, Col) :- Row >= 0, Row < Size,
-							   Col >= 0, Col < Size.
+checkRowCol(Size, Row, Col) :- Row > 0, Row < Size,
+							   Col > 0, Col < Size.
 					 		
 
 

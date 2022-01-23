@@ -1,8 +1,3 @@
-:- include('input.pl').
-:- include('main.pl').
-:- include('move.pl').
-:- include('bot.pl').
-
 %initial_state(-GameState, +Size)
 /*
 Returns the initial GameState with the given Size
@@ -17,14 +12,6 @@ Returns created GameState and displays it
 initialize(GameState, Size):-
     initial_state(GameState, Size),
     display_game(GameState).
-
-%play(+GameState, +Size, +Player, +PlayerType, +EnemyType)
-/*
-Verifies if the game is over (a player created a path)
-and prints the Winner
-*/
-% play(GameState, Size, Player, _, _):-
-%     game_over(GameState, Size, Player, Winner), !, printWinner(Winner).
 
 /*
 If game is not over,
@@ -44,11 +31,6 @@ play(GameState, Size, Player, PlayerType, EnemyType):-
     display_game(NewGameState),
     game_over(NewGameState, Size, Player, PlayerType, EnemyType, Move, Winner), !, printWinner(Winner).
 
-
-first_play(1, Size, Difficulty) :- initialize(GameState, Size),
-                                   play(GameState, Size, 1, 'Player', 'Easy').
-
-
 game_over(GameState, Size, Player, Winner) :-
     checkWinner(GameState, Size, Player, Winner).
 
@@ -58,7 +40,7 @@ game_over(GameState, Size, Player, _, _, Move, Winner) :-
 
 game_over(GameState, Size, Player, PlayerType, EnemyType, _, _) :- 
     Enemy is -Player,
-    play(GameState,  Size, Enemy, EnemyType, PlayerType).
+    !, play(GameState,  Size, Enemy, EnemyType, PlayerType).
 
 
 checkWinner(GameState, Size, Player, Winner) :-

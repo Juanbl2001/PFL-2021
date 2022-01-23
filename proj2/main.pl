@@ -1,14 +1,3 @@
-:-include('board.pl'). %File that generates the initial board
-:-use_module(library(between)).
-:-use_module(library(system)).
-%Starts the game
-play :- write('Welcome to the JesonBoard game! Lets have some fun'), nl , nl, chooseMode.
-
-%mainMenu/0
-/*
-Displays initial menu reads the option input and checks if it is valid and acts accordingly to the option chosen
-*/
-%Chooses the mode of the game
 
 selectMenuOption(NumOptions, ValidOption) :-
     write('\nInsert option:\n'),
@@ -34,6 +23,11 @@ If the verification above fails, then it outputs a error message and the user is
 validateMenuOption(_, _, _) :-
     write('\nInvalid option! Try again:\n'), skip_line, fail.
 
+%chooseMode/0
+/*
+Displays initial menu reads the option input and checks if it is valid and acts accordingly to the option chosen
+*/
+%Chooses the mode of the game
 chooseMode :-
     repeat,
     write('\33\[2J'),
@@ -134,16 +128,15 @@ playMode :-
     write('|                  0. Return to Main Menu                  |\n'),
     write('|                                                          |\n'),
     write('|__________________________________________________________|\n'),
-    selectMenuOption(2, ValidOption),
+    selectMenuOption(3, ValidOption),
     menuAction(ValidOption).
 
 menuAction(1) :-
-    %boardSizeMenu(8),
     write('\n\n\tHave fun!\n\n'),
-    initialize(GameState, Size),
-    play(GameState, Size, 1, 'Player', 'Player'),
+    initialize(GameState, 9),
+    play(GameState, 9, 1, 'Player', 'Player'),
     enterContinue,
-    mainMenu.
+    chooseMode.
     
 %menuAction(+ValidOption)
 /*
@@ -153,19 +146,23 @@ displays the choose first player menu, checks again if the input is valid
 and acts accordingly to all the choices made by input
 */
 menuAction(2) :-
-    %boardSizeMenu(8),
     write('\n\n\tHave fun!\n\n'),
-    initialize(GameState, Size),
-    play(GameState, Size, 1, 'Easy', 'Player'),
+    initialize(GameState, 9),
+    play(GameState, 9, 1, 'Player', 'Easy'),
     enterContinue,
-    mainMenu.
+    chooseMode.
 
 menuAction(3) :-
-    %boardSizeMenu(8),
     write('\n\n\tHave fun!\n\n'),
-    initialize(GameState, Size),
-    play(GameState, Size, 1, 'Easy', 'Easy'),
+    initialize(GameState, 9),
+    play(GameState, 9, 1, 'Easy', 'Easy'),
     enterContinue,
-    mainMenu.
+    chooseMode.
 
-%startMode(1) :- !, initial(Board), nl, write('Human vs Human'), asserta(gameMode(1)), nl, write('And game begins!'), nl, nl, nl.
+%enterContinue/0
+/*
+Waits for an Enter press
+*/
+enterContinue:-
+	write('\nPress ENTER to continue.'),
+    skip_line.

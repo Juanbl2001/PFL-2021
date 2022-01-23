@@ -17,16 +17,16 @@ validateMenuOption(OptionInput, ValidOption, NumOptions) :-
 
 %validateMenuOption(+OptionInput,-ValidOption,+NumOptions)
 /*
-If the verification above fails, then it outputs a error message and the user is asked for a new input
+Se a verificação falha, manda uma mensagem de erro e pede ao utilizador para inserir um novo input.
 */
 validateMenuOption(_, _, _) :-
     write('\nInvalid option! Try again:\n'), skip_line, fail.
 
 %chooseMode/0
 /*
-Displays initial menu reads the option input and checks if it is valid and acts accordingly to the option chosen
+Exibe o menu inicial lê a opção de entrada e verifica se é válida e age de acordo com a opção escolhida
 */
-%Chooses the mode of the game
+
 chooseMode :-
     repeat,
     write('\33\[2J'),
@@ -58,6 +58,10 @@ mainMenuAction(2) :-
 mainMenuAction(0) :-
     endMode.
 
+%rulesMode/0
+/*
+Mostra as regras do jogo ao utilizador, clicar em zero para voltar ao menu inicial
+*/
 rulesMode :-
     write('\33\[2J'),
     write('\n __________________________________________________________\n'),
@@ -81,7 +85,10 @@ rulesMode :-
     selectMenuOption(0, _),
     chooseMode.
 
-
+%endMode/0
+/*
+Ecrã para a saida do jogo, espera 5 segundos e a seguir limpa.
+*/
 endMode :-
     write('\33\[2J'),
     write('\n __________________________________________________________\n'),
@@ -103,9 +110,12 @@ endMode :-
     write('|                                                          |\n'),
     write('|__________________________________________________________|\n'),
     sleep(5),
-    write('\33\[2J'),
-    halt(10).
+    write('\33\[2J').
 
+%playMode/0
+/*
+Ecrã para a seleção de jogo, 3 opções de jogo + a possibildade de regressar ao menu inicial
+*/
 playMode :-
     write('\33\[2J'),
     write('\n __________________________________________________________\n'),
@@ -136,14 +146,7 @@ menuAction(1) :-
     play(GameState, 9, 1, 'Player', 'Player'),
     enterContinue,
     chooseMode.
-    
-%menuAction(+ValidOption)
-/*
-Displays the board size menu, checks if the input is valid, 
-displays the bot difficulty menu, checks again if the input is valid,
-displays the choose first player menu, checks again if the input is valid
-and acts accordingly to all the choices made by input
-*/
+
 menuAction(2) :-
     write('\n\n\tHave fun!\n\n'),
     initialize(GameState, 9),
@@ -157,6 +160,7 @@ menuAction(3) :-
     play(GameState, 9, 1, 'Easy', 'Easy'),
     enterContinue,
     chooseMode.
+
 menuAction(0):-
     chooseMode.
 

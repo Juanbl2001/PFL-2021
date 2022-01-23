@@ -80,21 +80,21 @@ No nosso existem dois tipos:
 Para fazer a escolha de uma opção o utilizador deverá escreve o número relativo à opção que quer e clicar Enter.
 
 - Logo a seguir a ter feito `play.` irá aparecer o menu principal do jogo:
-![Main Menu](https://i.imgur.com/JocuD4n.png)
+![Main Menu](https://i.imgur.com/JocuD4n.png)<br>
 
-- A opção `1` mostra o seguinte menu que contem as 3 seguintes opções ![Game Menu](https://i.imgur.com/H9sQWPD.png)<br>*Game Menu* <br><br>Neste Menu se selecionar a opção `2` ainda terá de escolher quem joga primeiro no seguinte menu (caso escolha a opção `1` ou `3` o jogo será iniciado logo de seguida) ![](https://i.imgur.com/IKO21S8.png)
+- A opção `1` mostra o seguinte menu que contem as 3 seguintes opções ![Game Menu](https://i.imgur.com/H9sQWPD.png)<br><br>Neste Menu se selecionar a opção `2` ainda terá de escolher quem joga primeiro no seguinte menu (caso escolha a opção `1` ou `3` o jogo será iniciado logo de seguida) ![](https://i.imgur.com/IKO21S8.png)<br>
 
 
-- A opção `2` apenas contêm um texto descritivo sobre as regras do jogo caso o utilizador queira saber. ![Rules Menu](https://i.imgur.com/pJYhWIs.png)
+- A opção `2` apenas contêm um texto descritivo sobre as regras do jogo caso o utilizador queira saber. ![Rules Menu](https://i.imgur.com/pJYhWIs.png)<br>
 
 
 - A opção `3` contêm uma breve mensagem de despedida e em 5 segundos limpa o ecrã e sai do jogo 
-![End Game](https://i.imgur.com/o25PjfX.png)
+![End Game](https://i.imgur.com/o25PjfX.png)<br>
 
 
 #### Jogo
 Assim que inicie o jogo irá aparecer o tabuleiro:
-![Inicial Board](https://i.imgur.com/OWZrQez.png)
+![Inicial Board](https://i.imgur.com/OWZrQez.png)<br>
 
 E, dependendo se é a vez do jogador ou do bot, apresenta um diálogo a pedir input ou um diálogo com o jogada que o bot irá fazer.
 
@@ -134,7 +134,7 @@ checkWinner(_, _, Player, Move, Winner):-
 - Uma jogada é composta por duas posições no tabuleiro. Ambas são compostas por um valor correspondente a uma coluna (inteiro) e um valor correspondente a uma linha (caráter). A primeira será a posição da peça que se quer mexer e a segunda para onde a quer mover.
 
 ![](https://i.imgur.com/QOCyPIj.png)
-*Posições a vermelho são os movimentos legais considerando que não sejam ou peças do mesmo jogador ou fora de limites*
+<br>*Posições a vermelho são os movimentos legais considerando que não sejam ou peças do mesmo jogador ou fora de limites*
 
  - Depois de ambos os inputs serem feitos, o valor da linha  em ambos é transformado num Inteiro correspondente ao indice da linha começando em 0, para facilitar os calculo no back-end.
 - O predicado `valid_moves` usa o predicado `getPlayerPieces` que verifica recursivamente, posição a posição, começando na posição (0,0) até a posição (8,8) que posições têm uma peça do jogador e guarda as numa lista. Se a posição que o jogador inseriu primeiro se encontra em tal lista então confirmamos que o primeiro input é válido. Logo a seguir chama o predicado `getPossibleMoves` que retorna, por sua vez utilizando o mesmo sistema de recursão, uma lista de todas as posições para qual legalmente a peça selecionada se pode mexer e verifica se uma delas é a posição que o jogador inseriu em segundo lugar. Para além destes predicados, temos o predicado auxiliar `checkMove` que serve para verificar quais das 8 posições a volta da posição selecionada esta disponivel. É usada dentro do predicado `getPossibleMoves`.

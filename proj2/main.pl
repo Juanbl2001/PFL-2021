@@ -127,7 +127,9 @@ playMode :-
     write('|                                                          |\n'),
     write('|                  1. Human vs. Human                      |\n'),
     write('|                                                          |\n'),
-    write('|                  2. Human vs. Computador                 |\n'),
+    write('|                  2. Human vs. Bot                        |\n'),
+    write('|                                                          |\n'),
+    write('|                  3. Bot vs. Bot                          |\n'),
     write('|                                                          |\n'),
     write('|                  0. Return to Main Menu                  |\n'),
     write('|                                                          |\n'),
@@ -151,10 +153,18 @@ displays the choose first player menu, checks again if the input is valid
 and acts accordingly to all the choices made by input
 */
 menuAction(2) :-
-    boardSizeMenu(Size), !,
-    botDificultyMenu(Difficulty),
-    chooseFirstPlayerMenu(First),
-    firstAction(First, Size, Difficulty),
+    %boardSizeMenu(8),
+    write('\n\n\tHave fun!\n\n'),
+    initialize(GameState, Size),
+    play(GameState, Size, 1, 'Easy', 'Player'),
+    enterContinue,
+    mainMenu.
+
+menuAction(3) :-
+    %boardSizeMenu(8),
+    write('\n\n\tHave fun!\n\n'),
+    initialize(GameState, Size),
+    play(GameState, Size, 1, 'Easy', 'Easy'),
     enterContinue,
     mainMenu.
 

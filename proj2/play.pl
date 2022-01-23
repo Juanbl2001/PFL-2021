@@ -22,20 +22,20 @@ and call the play predicate to make the enemy play
 */
 
 play(GameState, Size, Player, _, _):-
-    game_over(GameState, Size, Player ,Winner),!, printWinner(Winner).
+    game_over(GameState, Size, Player ,Winner).
 
 
 play(GameState, Size, Player, PlayerType, EnemyType):-
     choose_move(GameState, Size, Player, PlayerType, Move),
     move(GameState, Player, Move, NewGameState),
     display_game(NewGameState),
-    game_over(NewGameState, Size, Player, PlayerType, EnemyType, Move, Winner), !, printWinner(Winner).
+    game_over(NewGameState, Size, Player, PlayerType, EnemyType, Move, Winner).
 
 game_over(GameState, Size, Player, Winner) :-
-    checkWinner(GameState, Size, Player, Winner).
+    checkWinner(GameState, Size, Player, Winner), !, printWinner(Winner).
 
 game_over(GameState, Size, Player, _, _, Move, Winner) :-
-    checkWinner(GameState, Size, Player, Move, Winner).
+    checkWinner(GameState, Size, Player, Move, Winner), !, printWinner(Winner).
 
 
 game_over(GameState, Size, Player, PlayerType, EnemyType, _, _) :- 

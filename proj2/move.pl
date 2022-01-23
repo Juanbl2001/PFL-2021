@@ -45,9 +45,11 @@ Selects a piece and a position to move if there are available moves for the play
 returning the move selected
 */
 select_move(GameState, Size, Player, 'Player', [SelectedPosition, MovePosition]):-
-    valid_moves(GameState, Size, Player, _),
+    valid_moves(GameState, Size, Player, ListOfMoves),
     selectPiece(GameState, Size, Player, SelectedPosition),
-    movePiece(GameState, Size, Player, SelectedPosition, MovePosition).
+    movePiece(GameState, Size, Player, SelectedPosition, MovePosition),
+	nl,write(SelectedPosition),nl, write(MovePosition), nl.
+	%member([SelectedPosition-MovePosition], ListOfMoves).
 
 /*
 If no available moves then select a piece to remove, returning the move selected
@@ -97,8 +99,6 @@ getPossibleMoves(GameState, Size, Player, Positions, ListOfPossibleMoves):-
 
 getPossibleMoves(_, _, _, [], ListOfPossibleMoves, ListOfPossibleMoves).
 getPossibleMoves(GameState, Size, Player, [Row-Column|PosRest], ListInterm, ListOfPossibleMoves):-
-	% write(Size),nl,
-	% write(Row-Column), nl,
 	checkMove(GameState, Size, Row, Column, Player, Moves),
 	appendMoves(Row-Column, Moves, CurrentMoves),
 	appendNotEmpty(ListInterm, CurrentMoves, NewList),
@@ -135,21 +135,21 @@ checkMove(GameState, Size, SelRow, SelColumn, Player, ListOfMoves) :-
 
 
 checkUpLeftMove(GameState, Size, Row, Col, Player, UpLeftMove):-
-    Row>0,
+    Row>=0,
 	NewRow is Row - 2,
 	NewCol is Col - 1,
 	checkRowCol(Size, NewRow, NewCol),
-    isEnemy(GameState, NewRow, NewCol, Player),
+    \+isPlayer(GameState, NewRow, NewCol, Player),
     UpLeftMove = [NewRow-NewCol].
 
 checkUpLeftMove(_, _, _, _, _, []).
 
 checkUpRightMove(GameState, Size, Row, Col, Player, UpRightMove):-
-    Row>0,
+    Row>=0,
 	NewRow is Row - 2,
 	NewCol is Col + 1,
 	checkRowCol(Size, NewRow, NewCol),
-    isEnemy(GameState, NewRow, NewCol, Player),
+    \+isPlayer(GameState, NewRow, NewCol, Player),
     UpRightMove = [NewRow-NewCol].
 
 checkUpRightMove(_, _, _, _, _, []).
@@ -159,7 +159,7 @@ checkDownLeftMove(GameState, Size, Row, Col, Player, DownLeftMove):-
 	NewRow is Row + 2,
 	NewCol is Col - 1,
 	checkRowCol(Size, NewRow, NewCol),
-    isEnemy(GameState, NewRow, NewCol, Player),
+    \+isPlayer(GameState, NewRow, NewCol, Player),
     DownLeftMove = [NewRow-NewCol].
 
 checkDownLeftMove(_, _, _, _, _, []).
@@ -169,7 +169,7 @@ checkDownRightMove(GameState, Size, Row, Col, Player, DownRightMove):-
 	NewRow is Row + 2,
 	NewCol is Col + 1,
 	checkRowCol(Size, NewRow, NewCol),
-    isEnemy(GameState, NewRow, NewCol, Player),
+    \+isPlayer(GameState, NewRow, NewCol, Player),
     DownRightMove = [NewRow-NewCol].
 
 checkDownRightMove(_, _, _, _, _, []).
@@ -179,7 +179,7 @@ checkLeftUpMove(GameState, Size, Row, Col, Player, LeftUpMove):-
 	NewCol is Col - 2,
 	NewRow is Row - 1,
 	checkRowCol(Size, NewRow, NewRow),
-    isEnemy(GameState, NewRow, NewCol, Player),
+    \+isPlayer(GameState, NewRow, NewCol, Player),
     LeftUpMove = [NewRow-NewCol].
 
 checkLeftUpMove(_, _, _, _, _, []).
@@ -189,7 +189,7 @@ checkLeftDownMove(GameState, Size, Row, Col, Player, LeftDownMove):-
 	NewCol is Col - 2,
 	NewRow is Row + 1,
 	checkRowCol(Size, NewRow, NewCol),
-	isEnemy(GameState, NewRow, NewCol, Player),
+	\+isPlayer(GameState, NewRow, NewCol, Player),
     LeftDownMove = [NewRow-NewCol].
 
 checkLeftDownMove(_, _, _, _, _, []).
@@ -199,7 +199,7 @@ checkRightUpMove(GameState, Size, Row, Col, Player, RightUpMove):-
 	NewCol is Col + 2,
 	NewRow is Row - 1,
 	checkRowCol(Size, NewRow, NewCol),
-    isEnemy(GameState, NewRow, NewCol, Player),
+    \+isPlayer(GameState, NewRow, NewCol, Player),
     RightUpMove = [NewRow-NewCol].
 
 checkRightUpMove(_, _, _, _, _, []).
@@ -209,7 +209,7 @@ checkRightDownMove(GameState, Size, Row, Col, Player, RightDownMove):-
 	NewCol is Col+2,
 	NewRow is Row + 1,
 	checkRowCol(Size, NewRow, NewCol),
-    isEnemy(GameState, NewRow, NewCol, Player),
+    isPlayer(GameState, NewRow, NewCol, Player),
     RightDownMove = [NewRow-NewCol].
 
 checkRightDownMove(_, _, _, _, _, []).
@@ -220,6 +220,10 @@ checkRowCol(Size, Row, Col) :- Row >= 0, Row < Size,
 					 		
 
 
+isPlayer(Board, Row, Column, Player) :-
+	getValue(Board, Row, Column, Value),
+	Value is Player.
+
 %isEnemy(+Board,+Row,+Column,+Player)
 /*
 Checks if board value in the given position (row and column) is the current player's enemy
@@ -229,7 +233,7 @@ isEnemy(Board, Row, Column, Player) :-
     Enemy is -Player.
 
 
-getValue(GameState, Row, Column, Value) :- 	
+getValue(Matrix, Row, Column, Value) :- 	
 	nth0(Row, Matrix, RowList),
 	nth0(Column, RowList, Value).
 
@@ -301,6 +305,14 @@ validateMove(Board, Size, SelectedRow-SelectedColumn, Player, ListOfMoves) :- wr
                                                                                \+isEmpty(ListOfMoves).
 
 validateMove(_, _, _, _, _) :- write('\n! No available moves for this piece. Choose again !\n'), fail.
+
+tryMove(Board, Size, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn) :-     
+    checkMove(Board, Size, SelectedRow, SelectedColumn, Player, ListOfMoves),
+	write(ListOfMoves),nl,write(MoveRow-MoveColumn),nl,
+    member(MoveRow-MoveColumn, ListOfMoves).
+
+tryMove(_, _, _, _, _) :- write('\n! You can´t move to that position. Choose again !\n'), fail.
+
 
 
 %replaceInList(+Index, +List, +Element, -NewList)

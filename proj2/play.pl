@@ -39,8 +39,6 @@ play(GameState, Size, Player, PlayerType, EnemyType):-
     move(GameState, Player, Move, NewGameState),
     display_game(NewGameState),
     Enemy is -Player,
-    write(Enemy), nl,
-    write(EnemyType), nl,
     !, play(NewGameState, Size, Enemy, EnemyType, PlayerType).
 
 

@@ -117,8 +117,8 @@ and if the movement is valid
 movePiece(Board, Size, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn):-
     repeat,
     write('\nMove to:\n'),
-    manageInputs(MoveRow, MoveColumn, Size).
-    %verifyOrtMove(Board, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn).
+    manageInputs(MoveRow, MoveColumn, Size),
+    tryMove(Board, Size, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn).
 
 %removePiece(+Board,+Size,+Player,-SelectedPosition)
 /*

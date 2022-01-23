@@ -39,28 +39,18 @@ getSelAndMovePosition(Move, SelPosition, MovPosition):-
 	nth0(0, Move, SelPosition),
 	nth0(1, Move, MovPosition).
 
-%select_move(+GameState, +Size, +Player, +PlayerType, -Move)
+%choose_move(+GameState, +Size, +Player, +PlayerType, -Move)
 /*
 Selects a piece and a position to move if there are available moves for the player,
 returning the move selected
 */
-select_move(GameState, Size, Player, 'Player', [SelectedPosition, MovePosition]):-
-    valid_moves(GameState, Size, Player, ListOfMoves),
+choose_move(GameState, Size, Player, 'Player', [SelectedPosition, MovePosition]):-
+    valid_moves(GameState, Size, Player, _),
     selectPiece(GameState, Size, Player, SelectedPosition),
-    movePiece(GameState, Size, Player, SelectedPosition, MovePosition),
-	nl,write(SelectedPosition),nl, write(MovePosition), nl.
-	%member([SelectedPosition-MovePosition], ListOfMoves).
-
-/*
-If no available moves then select a piece to remove, returning the move selected
-*/
-select_move(GameState, Size, Player, 'Player', SelectedPosition):-
-    removePiece(GameState, Size, Player, SelectedPosition).
-
+    movePiece(GameState, Size, Player, SelectedPosition, MovePosition).
 
 
 valid_moves(GameState, Size, Player, ListOfMoves):-
-	write('TESTE1'),
     getPlayerPieces(GameState, Size, Player, ListOfPositions),
     getPossibleMoves(GameState, Size, Player, ListOfPositions, ListOfMoves),
 	\+isEmpty(ListOfMoves).
@@ -135,7 +125,7 @@ checkMove(GameState, Size, SelRow, SelColumn, Player, ListOfMoves) :-
 
 
 checkUpLeftMove(GameState, Size, Row, Col, Player, UpLeftMove):-
-    Row>=0,
+    Row>0,
 	NewRow is Row - 2,
 	NewCol is Col - 1,
 	checkRowCol(Size, NewRow, NewCol),
@@ -145,7 +135,7 @@ checkUpLeftMove(GameState, Size, Row, Col, Player, UpLeftMove):-
 checkUpLeftMove(_, _, _, _, _, []).
 
 checkUpRightMove(GameState, Size, Row, Col, Player, UpRightMove):-
-    Row>=0,
+    Row>0,
 	NewRow is Row - 2,
 	NewCol is Col + 1,
 	checkRowCol(Size, NewRow, NewCol),
@@ -299,16 +289,14 @@ validatePlayer(Board, SelectedRow-SelectedColumn, Player) :- getValue(Board, Sel
 validatePlayer(_, _, _) :- write('\n! That is not your piece. Choose again !\n'), fail.
 
 
-validateMove(Board, Size, SelectedRow-SelectedColumn, Player, ListOfMoves) :- write(Size),nl,
- 																			  write(SelectedRow-SelectedColumn), nl,
-																			   checkMove(Board, Size, SelectedRow, SelectedColumn, Player, ListOfMoves),
-                                                                               \+isEmpty(ListOfMoves).
+validateMove(Board, Size, SelectedRow-SelectedColumn, Player, ListOfMoves) :- 
+	checkMove(Board, Size, SelectedRow, SelectedColumn, Player, ListOfMoves),
+	\+isEmpty(ListOfMoves).
 
 validateMove(_, _, _, _, _) :- write('\n! No available moves for this piece. Choose again !\n'), fail.
 
 tryMove(Board, Size, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn) :-     
     checkMove(Board, Size, SelectedRow, SelectedColumn, Player, ListOfMoves),
-	write(ListOfMoves),nl,write(MoveRow-MoveColumn),nl,
     member(MoveRow-MoveColumn, ListOfMoves).
 
 tryMove(_, _, _, _, _) :- write('\n! You can´t move to that position. Choose again !\n'), fail.

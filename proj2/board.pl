@@ -54,28 +54,28 @@ generateBoard(GameState, Size):-
 Creates a board row by row with given Size
 */
 buildBoard(FinalBoard, FinalBoard, Size, Size, _).
-buildBoard(InitialBoard, FinalBoard, Size, RowIndex, Cell):-
+buildBoard(InitialBoard, FinalBoard, Size, RowIndex, _):-
     RowIndex =:= 0,
     buildRow([], BuiltRow, Size, 0, 1),
     append(InitialBoard, BuiltRow, UpdatedBoard),
     NewRowIndex is RowIndex+1,
     buildBoard(UpdatedBoard, FinalBoard, Size, NewRowIndex, 0).
 
-buildBoard(InitialBoard, FinalBoard, Size, RowIndex, Cell):-
+buildBoard(InitialBoard, FinalBoard, Size, RowIndex, _):-
     RowIndex =:= 8,
     buildRow([], BuiltRow, Size, 0, -1),
     append(InitialBoard, BuiltRow, UpdatedBoard),
     NewRowIndex is RowIndex+1,
     buildBoard(UpdatedBoard, FinalBoard, Size, NewRowIndex, 0).
 
-buildBoard(InitialBoard, FinalBoard, Size, RowIndex, Cell):-
+buildBoard(InitialBoard, FinalBoard, Size, RowIndex, _):-
     RowIndex =\= 8, RowIndex =\= 0, RowIndex =\= 4, RowIndex < 10,
     buildRow([], BuiltRow, Size, 0, 0),
     append(InitialBoard, BuiltRow, UpdatedBoard),
     NewRowIndex is RowIndex+1,
     buildBoard(UpdatedBoard, FinalBoard, Size, NewRowIndex, 0).
 
-buildBoard(InitialBoard, FinalBoard, Size, RowIndex, Cell):-
+buildBoard(InitialBoard, FinalBoard, Size, RowIndex, _):-
     RowIndex =:= 4,
     buildMiddleRow([], BuiltRow, Size, 0, 0),
     append(InitialBoard, BuiltRow, UpdatedBoard),

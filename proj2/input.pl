@@ -120,18 +120,6 @@ movePiece(Board, Size, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn):-
     manageInputs(MoveRow, MoveColumn, Size),
     tryMove(Board, Size, Player, SelectedRow-SelectedColumn, MoveRow-MoveColumn).
 
-%removePiece(+Board,+Size,+Player,-SelectedPosition)
-/*
-The player selects the piece to be removed
-the inputs are checked if they are within the boundaries of the board,
-and if the players selects their own piece
-*/
-removePiece(Board, Size, Player, SelectedRow-SelectedColumn):-
-    repeat,
-    write('\nRemove piece:\n'),
-    manageInputs(SelectedRow, SelectedColumn, Size),
-    verifyPlayer(Board, SelectedRow-SelectedColumn, Player).
-
 %printWinner(+Player)
 /*
 Prints a formated red player win message

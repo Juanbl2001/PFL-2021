@@ -35,34 +35,30 @@ and call the play predicate to make the enemy play
 */
 
 play(GameState, Size, Player, _, _):-
-    game_over(GameState, Size, Player ,Winner),
-    write(Winner), !, printWinner(Winner).
+    game_over(GameState, Size, Player ,Winner),!, printWinner(Winner).
 
-
-% play(GameState, Size, Player, PlayerType, _):-
-%     %printTurn(Player),
-%     select_move(GameState, Size, Player, PlayerType, Move),
-%     move(GameState, Player, Move, NewGameState),
-%     display_game(NewGameState),
-%     game_over(GameState, Size, Player, Move, Winner), !, printWinner(Winner),
-%     write('MERDA').
 
 play(GameState, Size, Player, PlayerType, EnemyType):-
-    %printTurn(Player),
-    select_move(GameState, Size, Player, PlayerType, Move),
+    choose_move(GameState, Size, Player, PlayerType, Move),
     move(GameState, Player, Move, NewGameState),
     display_game(NewGameState),
-    Enemy is -Player,
-    !, play(NewGameState, Size, Enemy, EnemyType, PlayerType).
+    game_over(NewGameState, Size, Player, PlayerType, EnemyType, Move, Winner), !, printWinner(Winner).
 
 
 first_play(1, Size, Difficulty) :- initialize(GameState, Size),
                                    play(GameState, Size, 1, 'Player', 'Easy').
 
 
-
 game_over(GameState, Size, Player, Winner) :-
     checkWinner(GameState, Size, Player, Winner).
+
+game_over(GameState, Size, Player, _, _, Move, Winner) :-
+    checkWinner(GameState, Size, Player, Move, Winner).
+
+
+game_over(GameState, Size, Player, PlayerType, EnemyType, _, _) :- 
+    Enemy is -Player,
+    play(GameState,  Size, Enemy, EnemyType, PlayerType).
 
 
 checkWinner(GameState, Size, Player, Winner) :-
@@ -70,19 +66,9 @@ checkWinner(GameState, Size, Player, Winner) :-
     isEmpty(ListOfPositions),
     Winner is -Player.
 
-% game_over(GameState, Size, Player, Move, Player):-
-%     checkWinner(GameState, Size, Move, Player).
 
-% game_over(GameState, Size, Player, Move, Enemy):-
-%     Enemy is -Player,
-%     checkWinner(GameState, Size, Move, Player).
-
-
-% checkWinner(GameState, Size, Move, Player):-
-%     getSelAndMovePosition(Move, SelRow-SelColumn, FinalRow-FinalColumn),
-%     SelRow is Size/2,
-%     SelColumn is Size/2.
-
-% checkWinner(GameState, Size, Move, Player):-
-%     getPlayerPieces(GameState, Size, Player, ListOfPositions),
-%     isEmpty(ListOfPositions).
+checkWinner(_, _, Player, Move, Winner):-
+    getSelAndMovePosition(Move, SelRow-SelColumn, _),
+    SelRow is 4,
+    SelColumn is 4,
+    Winner is Player.

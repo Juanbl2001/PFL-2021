@@ -1,27 +1,18 @@
 %move(+GameState, +Player, +Move, -NewGameState)
 /*
-Move when available moves (and in this case Move is [SelectedRow-SelectedColumn, MoveRow-MoveColumn]),
-replacing on board the selected position with empty space and moving position with player piece,
-returning the board after the move
+Move quando os movimentos disponíveis (e neste caso Mover é [SelectedRow-SelectedColumn, MoveRow-MoveColumn]),
+substituindo no tabuleiro a posição selecionada com espaço vazio e a posição de movimento 
+com a peça do jogador, devolvendo o tabuleiro após o movimento
 */
 move(GameState, Player, Move, NewGameState):-
     getSelAndMovePosition(Move, SelRow-SelColumn, FinalRow-FinalColumn),
     replaceInMatrix(GameState, SelRow, SelColumn, 0, UpdatedGameState),
     replaceInMatrix(UpdatedGameState, FinalRow, FinalColumn, Player, NewGameState).
 
-/*
-Move when no available moves (and in this case Move is SelectedRow-SelectedColumn),
-replacing selected position on board with empty space,
-returning the board after the remove
-*/
-move(GameState, _, Row-Column, NewGameState):-
-    replaceInMatrix(GameState, Row, Column, 0, NewGameState).
-
-
 
 %replaceInMatrix(+Matrix, +Row, +Column, +Value, -FinalMatrix)
 /*
-Replaces Value in given Row and Column of the Matrix
+Substitui o valor em determinada linha e coluna da matriz
 */
 replaceInMatrix(Matrix, Row, Column, Value, FinalMatrix) :-
 	nth0(Row, Matrix, RowsList),
@@ -31,7 +22,7 @@ replaceInMatrix(Matrix, Row, Column, Value, FinalMatrix) :-
 
 %getSelAndMovePosition(+Move,-SelPosition,-MovPosition)
 /*
-Returns the current and the moving positions
+Divide as duas posições
 */
 getSelAndMovePosition(Move, SelPosition, MovPosition):-
 	nth0(0, Move, SelPosition),
@@ -39,8 +30,8 @@ getSelAndMovePosition(Move, SelPosition, MovPosition):-
 
 %choose_move(+GameState, +Size, +Player, +PlayerType, -Move)
 /*
-Selects a piece and a position to move if there are available moves for the player,
-returning the move selected
+Seleciona uma peça e uma posição para mover se houver movimentos disponíveis para o jogador, 
+retornando o movimento selecionado
 */
 choose_move(GameState, Size, Player, 'Player', [SelectedPosition, MovePosition]):-
     valid_moves(GameState, Size, Player, _),
@@ -55,31 +46,30 @@ valid_moves(GameState, Size, Player, ListOfMoves):-
 
 %getPlayerPieces(+GameState,+Size,+Player,-ListOfPositions)
 /*
-Retuns on ListOfPositions the all the positions where there are a player's piece
+Retorna em ListOfPositions todas as posições onde há uma peça do jogador
 */
 getPlayerPieces(GameState, Size, Player, ListOfPositions) :-
 	getPlayerPieces(GameState, Size, 0, 0, Player, [], ListOfPositions), !.
 
-%Base case, when the position is Row=8 Column=0, it stops (end of the board)
+%Caso base
 getPlayerPieces(_, Size, Row, Column, _, ListOfPositions, ListOfPositions):-
 	checkLastRow(Row, Column, Size).
 
-%If it is the player is that cell, then append that position and pass to the next position
+%Se for o jogador que é essa célula, então anexe essa posição e passe para a próxima posição
 getPlayerPieces(GameState, Size, Row, Column, Player, ListInterm, ListOfPositions):-
 	getValue(GameState, Row, Column, Player),
 	append(ListInterm, [Row-Column], NewList),
 	nextPosition(Row, Column, Size, NextRow, NextColumn),
 	getPlayerPieces(GameState, Size, NextRow, NextColumn, Player, NewList, ListOfPositions).
 
-%If it is not the player in that cell, avance to the next position
+%Se não for o jogador naquela célula, avance para a próxima posição
 getPlayerPieces(GameState, Size, Row, Column, Player, ListInterm, ListOfPositions):-
 	nextPosition(Row, Column, Size, NextRow, NextColumn),
 	getPlayerPieces(GameState, Size, NextRow, NextColumn, Player, ListInterm, ListOfPositions).
 
 %getPossibleMoves(+GameState, +Size, +Player, +Positions, -ListOfPossibleMoves)
 /*
-For all the positions passed, it checks the available moves for each
-the listOfPossibleMoves stores the moves as as [[SelectedRow-SelectedColumn, MoveRow-MoveColumn], ...]
+Para todas as posições passadas, ele verifica os movimentos disponíveis para cada
 */
 
 getPossibleMoves(GameState, Size, Player, Positions, ListOfPossibleMoves):-
@@ -96,8 +86,8 @@ getPossibleMoves(GameState, Size, Player, [Row-Column|PosRest], ListInterm, List
 
 %checkMove(+GameState, +Size, +SelectedRow, +SelectedColumn, +Player, -ListOfMoves)
 /*
-Checks all possible "L" moves from the given position
-Returns a list with all the possible moves for that piece (as [MoveRow1-MoveColumn1, ...])
+Verifica todos os movimentos "L" possíveis a partir da posição especificada.
+Retorna uma lista com todos os movimentos possíveis para aquela peça (como [MoveRow1-MoveColumn1, ...])
 */
 checkMove(GameState, Size, SelRow, SelColumn, Player, ListOfMoves) :-
     checkUpLeftMove(GameState, Size, SelRow, SelColumn, Player, UpMoveLeft),
@@ -219,7 +209,7 @@ getValue(Matrix, Row, Column, Value) :-
 
 %appendMoves(+Pos,+Moves,-RetList)
 /*
-Return on RetList a list of sublists with for each position moves like [PositionRow-PosionColumn, MoveRow-MoveColumn], ...]
+Retorna em RetList uma lista de sublistas com movimentos para cada posição como [PositionRow-PosionColumn, MoveRow-MoveColumn], ...]
 */
 appendMoves(_, [], []).
 appendMoves(Pos, Moves, RetList):-
@@ -234,8 +224,8 @@ appendMoves(Pos, [Move | T], AuxList, RetList):-
 
 %appendNotEmpty(+L1,+L2,-L12)
 /*
-If given L2 list is not empty, append it to L1 and result is L12
-Base case, if L2 is an empty list then the result is L1
+Se a lista L2 fornecida não estiver vazia, anexe-a a L1 e o resultado é L12
+Caso base, se L2 for uma lista vazia, o resultado será L1
 */
 appendNotEmpty(L1, [], L1).
 appendNotEmpty(L1, L2, L12):-
@@ -244,7 +234,7 @@ appendNotEmpty(L1, L2, L12):-
 
 %nextPosition(+Row,+Column,+Size,-NextRow,-NextColumn)
 /*
-If the end of the column has not been reached, avance to the next collumn, remaining in the same row
+Se o final da coluna não foi alcançado, avance para a próxima coluna, permanecendo na mesma linha
 */
 nextPosition(Row, Column, Size, Row, NextColumn):-
     NextColumn is Column + 1,
@@ -252,7 +242,7 @@ nextPosition(Row, Column, Size, Row, NextColumn):-
 	
 %nextPosition(+Row,+Column,+Length,-NextRow,-NextColumn)
 /*
-If the end of the column has been reached, avance to the next row, starting in the first column(0)
+Se o final da coluna foi alcançado, avance para a próxima linha, começando na primeira column(0)
 */
 nextPosition(Row, Column, Size, NextRow, 0):-
     NextColumn is Column + 1,
@@ -266,7 +256,7 @@ checkLastRow(Row, Column, Size) :- Row is Size,
 								  
 %isEmpty(+List)
 /*
-Checks if List is empty
+Verifica se a Lista está vazia
 */
 isEmpty([]).
 
@@ -294,7 +284,7 @@ tryMove(_, _, _, _, _) :- write('\n! You can´t move to that position. Choose ag
 
 %replaceInList(+Index, +List, +Element, -NewList)
 /*
-Replaces an element in a List at a specified Index with Element
+Substitui um elemento em uma lista em um índice especificado por elemento
 */
 replaceInList(Index, List, Element, NewList) :-
 	nth0(Index, List, _, Rest),

@@ -161,6 +161,10 @@ menuAction(3) :-
 menuAction(0):-
     chooseMode.
 
+%firstMoveMode/0
+/*
+Ecrã para a seleção de quem começa o jogo, 2 (jogador ou bot) + a possibildade de regressar ao menu inicial
+*/
 firstMoveMode :-
     write('\33\[2J'),
     write('\n __________________________________________________________\n'),

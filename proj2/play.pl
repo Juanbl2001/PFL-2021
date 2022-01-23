@@ -1,24 +1,22 @@
 %initial_state(-GameState, +Size)
 /*
-Returns the initial GameState with the given Size
+Retorna o GameState inicial com o tamanho fornecido
 */
 initial_state(GameState, Size) :- generateBoard(GameState, Size).
 
 
 %initialize(-GameState, +Size)
 /*
-Returns created GameState and displays it
+Retorna o GameState criado e o exibe
 */
 initialize(GameState, Size):-
     initial_state(GameState, Size),
     display_game(GameState).
 
 /*
-If game is not over,
-print the current player turn, 
-if the current player is a bot, the program sleeps for 1 second,
-player chooses a move according to its type, makes the move and prints the board afterwards,
-and call the play predicate to make the enemy play
+Se o jogo não acabou, imprima o turno do jogador atual, se o jogador atual for um bot, o programa dorme por 1 segundo, 
+o jogador escolhe um movimento de acordo com seu tipo, faz o movimento e imprime o tabuleiro depois, 
+e chama o predicado de jogo para fazer o inimigo jogar
 */
 
 play(GameState, Size, Player, _):-
